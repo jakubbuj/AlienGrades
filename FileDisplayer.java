@@ -1,4 +1,3 @@
-
 import java.io.File;
 import java.util.Arrays;
 import java.util.Scanner;
@@ -25,26 +24,21 @@ public class Testing{
 
     public static double[][] fileIntoArray(String fileName){
 
-        try {
-            double[][] studentGradesArray;  
-        	// Adapt this when you want to read and display a different file.
+        try {try {
+            double[][] studentGradesArray = new double[0][]; 
             File file=new File(fileName);
-            
-            // This code uses two Scanners, one which scans the file line per line
             Scanner fileScanner = new Scanner(file);
 
             int numOfCourses = 30;
-            int linesDone = 0;
-            int studentID = -1;
-            studentGradesArray = new double[0][];
-            int arrayLength=-1;
+            int studentID = -1; //small value to initialize
+            int arrayLength=-1; //small value to initialize
 
-            
+            int linesDone = 0;
             while (fileScanner.hasNextLine() && linesDone <= 5) {
 
             	String line = fileScanner.nextLine();
             	linesDone++;
-                int courseIndex = 0;
+                int courseIndex = 0;    //keeps track of the course
 
             	// and one that scans the line entry per entry using the commas as delimiters
             	Scanner lineScanner = new Scanner(line);
@@ -52,13 +46,14 @@ public class Testing{
             	while (lineScanner.hasNext()) {
             		if (lineScanner.hasNextInt()) {
             			studentID = lineScanner.nextInt();
+
                         //If the index (indicated by studentID) is larger than the length of the array:
                         //  create a larger array with length studentID+1
                         if(arrayLength<studentID){
                             arrayLength = studentID;
                             studentGradesArray = Arrays.copyOf(studentGradesArray, studentID+1);
                         }
-                        //initialises only the studentID's to save resources
+                        //initialises only the studentID's we need to save resources
                         studentGradesArray[studentID] = new double[numOfCourses];
 
             		} else if (lineScanner.hasNextDouble()) {
