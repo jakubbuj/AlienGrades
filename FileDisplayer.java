@@ -6,12 +6,28 @@ import java.util.Scanner;
 public class Testing{
 
     public static void main(String[] args) {
+        
+        double[][] studentGradesArray = fileIntoArray("GraduateGrades.csv");
 
-        double[][] studentGradesArray;
+        for(int i=0; i<studentGradesArray.length; i++){
+            if(studentGradesArray[i] == null){continue;}
+            System.out.println(i+" "+Arrays.toString(studentGradesArray[i]));
+		}
+        System.out.println();
+        
+        studentGradesArray = fileIntoArray("CurrentGrades.csv");
+
+        for(int i=0; i<studentGradesArray.length; i++){
+            if(studentGradesArray[i] == null){continue;}
+            System.out.println(i+" "+Arrays.toString(studentGradesArray[i]));
+		}
+    }
+
+    public static double[][] fileIntoArray(String fileName){
 
         try {
+            double[][] studentGradesArray;  
         	// Adapt this when you want to read and display a different file.
-            String fileName = "CurrentGrades.csv";
             File file=new File(fileName);
             
             // This code uses two Scanners, one which scans the file line per line
@@ -21,7 +37,7 @@ public class Testing{
             int linesDone = 0;
             int studentID = -1;
             studentGradesArray = new double[0][];
-            int largestID=-1;
+            int arrayLength=-1;
 
             
             while (fileScanner.hasNextLine() && linesDone <= 5) {
@@ -34,17 +50,15 @@ public class Testing{
             	Scanner lineScanner = new Scanner(line);
                 lineScanner.useDelimiter(",");
             	while (lineScanner.hasNext()) {
-            		// Separate commands can be used depending on the types of the entries
-            		// (i) and (s) are added to the printout to show how each entry is recognized
             		if (lineScanner.hasNextInt()) {
-            			int i = lineScanner.nextInt();
-                        studentID=i;
-                        //creates a larger array of length studentID
-                        if(largestID<studentID){
-                            largestID = studentID;
+            			studentID = lineScanner.nextInt();
+                        //If the index (indicated by studentID) is larger than the length of the array:
+                        //  create a larger array with length studentID+1
+                        if(arrayLength<studentID){
+                            arrayLength = studentID;
                             studentGradesArray = Arrays.copyOf(studentGradesArray, studentID+1);
                         }
-                        //initialises only the studentID's
+                        //initialises only the studentID's to save resources
                         studentGradesArray[studentID] = new double[numOfCourses];
 
             		} else if (lineScanner.hasNextDouble()) {
@@ -66,16 +80,13 @@ public class Testing{
             fileScanner.close();
             //prints the grades array per row with student index
 
-            for(int i=0; i<studentGradesArray.length; i++){
-                if(studentGradesArray[i] == null){continue;}
-				System.out.println(i+" "+Arrays.toString(studentGradesArray[i]));
-			}
+            return studentGradesArray;
             
 
         } catch (Exception ex) {
             ex.printStackTrace();
+            return null;
         }
-
     }
 
 
@@ -129,8 +140,3 @@ public class Testing{
    
     
 }
-
-
-
-
-   
