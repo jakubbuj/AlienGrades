@@ -6,23 +6,23 @@ public class Testing{
 
     public static void main(String[] args) {
         
-        double[][] studentGradesArray = fileIntoArray("GraduateGrades.csv");
+        double[][] graduate_grades = File_To_Array("GraduateGrades.csv");
+        double[][] current_grades = File_To_Array("CurrentGrades.csv");
 
-        for(int i=0; i<studentGradesArray.length; i++){
-            if(studentGradesArray[i] == null){continue;}
-            System.out.println(i+" "+Arrays.toString(studentGradesArray[i]));
+        //only used for printing the arrays
+        for(int i=0; i<graduate_grades.length; i++){
+            if(graduate_grades[i] == null){continue;}
+            System.out.println(i+" "+Arrays.toString(graduate_grades[i]));
 		}
         System.out.println();
-        
-        studentGradesArray = fileIntoArray("CurrentGrades.csv");
-
-        for(int i=0; i<studentGradesArray.length; i++){
-            if(studentGradesArray[i] == null){continue;}
-            System.out.println(i+" "+Arrays.toString(studentGradesArray[i]));
+        for(int i=0; i<current_grades.length; i++){
+            if(current_grades[i] == null){continue;}
+            System.out.println(i+" "+Arrays.toString(current_grades[i]));
 		}
     }
 
-    public static double[][] fileIntoArray(String fileName){
+    public static double[][] File_To_Array(String fileName){
+
 
         try {try {
             double[][] studentGradesArray = new double[0][]; 
@@ -90,7 +90,7 @@ public class Testing{
      * @param course: index of the grade corresponding to the course for a student
      * @return double array: containing {mean, median, spread}
      */
-    public static double[] mmsCourse(double[][] studentGradesArray, int course){
+    public static double[] MMS_Course(double[][] studentGradesArray, int course){
         double[] mms = new double[3]; 
         int numOfStudents = studentGradesArray.length;
 
