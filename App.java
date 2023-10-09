@@ -2,7 +2,7 @@ import java.io.File;
 import java.util.Arrays;
 import java.util.Scanner;
 
-public class Testing{
+public class App{
 
     public static void main(String[] args) {
         
@@ -22,9 +22,7 @@ public class Testing{
     }
 
     public static double[][] File_To_Array(String fileName){
-
-
-        try {try {
+        try {
             double[][] studentGradesArray = new double[0][]; 
             File file=new File(fileName);
             Scanner fileScanner = new Scanner(file);
@@ -35,7 +33,6 @@ public class Testing{
 
             int linesDone = 0;
             while (fileScanner.hasNextLine() && linesDone <= 5) {
-
             	String line = fileScanner.nextLine();
             	linesDone++;
                 int courseIndex = 0;    //keeps track of the course
@@ -68,16 +65,13 @@ public class Testing{
                         courseIndex++;
             		}
             	}
-            
             	lineScanner.close();
             }
-            
             fileScanner.close();
             //prints the grades array per row with student index
 
             return studentGradesArray;
             
-
         } catch (Exception ex) {
             ex.printStackTrace();
             return null;
@@ -130,8 +124,5 @@ public class Testing{
 
         return mms;
     }
-
- 
-   
-    
 }
+
