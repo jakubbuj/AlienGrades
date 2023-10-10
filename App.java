@@ -6,12 +6,12 @@ public class App{
 
     public static void main(String[] args) {
         //arrays 
-        double[][] graduate_grades = File_To_Array("GraduateGrades.csv");
-        double[][] current_grades = File_To_Array("CurrentGrades.csv");
+        //double[][] graduate_grades = File_To_Array("GraduateGrades.csv");
+        //double[][] current_grades = File_To_Array("CurrentGrades.csv");
        
 
        //use if you have werid bug wiht 0.0's in graduate grades. the error is located in File_To_Array - hasNextDouble
-/*         
+       
         double[][] graduate_grades={
             {8.0, 8.0, 7.0, 8.0, 6.0, 7.0, 9.0, 7.0, 8.0, 6.0, 6.0, 9.0, 10.0, 8.0, 6.0, 10.0, 7.0, 9.0, 10.0, 8.0, 6.0, 8.0, 6.0, 6.0, 6.0, 9.0, 6.0, 6.0, 6.0, 8.0},
             {10.0, 10.0, 10.0,10.0,10.0,10.0,10.0,10.0,10.0,10.0,10.0,10.0,10.0,10.0,10.0,10.0,10.0,10.0,10.0,10.0,10.0,10.0,10.0,10.0,10.0,10.0,10.0,10.0,10.0,10.0,}, //cum laudge
@@ -215,12 +215,14 @@ public class App{
             {-1.0, 7.0, -1.0, -1.0, -1.0, -1.0, -1.0, -1.0, -1.0, -1.0, -1.0, -1.0, -1.0, 6.0, -1.0, 7.0, -1.0, 6.0, -1.0, -1.0, 7.0, -1.0, -1.0, -1.0, -1.0, 7.0, 7.0, -1.0, -1.0, -1.0},
             {-1.0, 8.0, -1.0, -1.0, -1.0, -1.0, -1.0, -1.0, -1.0, -1.0, -1.0, -1.0, -1.0, 8.0, -1.0, 9.0, -1.0, 7.0, -1.0, -1.0, 9.0, -1.0, -1.0, -1.0, -1.0, 7.0, 8.0, -1.0, -1.0, -1.0},            
 
-        }; */
+        }; 
         
         int number_of_courses = graduate_grades[0].length;
 
         int[] cl_student_id = Cum_Laude_Graduates(graduate_grades);
         
+        System.out.println(Arrays.deepToString(Similarity_Array(graduate_grades, number_of_courses)));
+        System.out.println(Arrays.deepToString(Similarity_Array(current_grades, number_of_courses)));
         /* 
         //only used for printing the arrays  (id's are not not the ones from csv for currentGrades);
         System.out.println("number of courses: "+number_of_courses);
@@ -237,7 +239,13 @@ public class App{
         System.out.println("\n\n");
         System.out.println("Cum Laudge student's id:\n" +Arrays.toString(cl_student_id));
     */
-        Comparing_Courses(graduate_grades,number_of_courses);
+      
+    // answers  step 1
+    System.out.println("Hardest coures: ");
+    System.out.println("Easiest coures: ");
+    System.out.println("list of best students: "+cl_student_id);
+    System.out.println("Most similar courses: ");
+
     }
 
     public static double[][] File_To_Array(String fileName){
@@ -297,6 +305,18 @@ public class App{
         }
     }
 
+
+
+     /*
+     * 
+     * STEP 1
+     *  - calculatating: mean median spread of grades for Students/Courses
+     *  - creating list of honored students Cum Laude
+     *  - findind similiarities between courses
+     * 
+     */
+
+
     /**calculates the mean, median and spread for a course with support for missing values
     * @param students_grades: a 2D-array containing studentID and grades
     * @param course: index of the grade corresponding to the course for a student
@@ -314,7 +334,7 @@ public class App{
             courseGrades[courseGrades.length-1] = student[course];
         }
         Arrays.sort(courseGrades);
-        System.out.println(Arrays.toString(courseGrades));
+        //System.out.println(Arrays.toString(courseGrades));
         if(numOfstudents==0)return mms;
         
         int len = courseGrades.length;
@@ -340,14 +360,7 @@ public class App{
         return mms;
     }
 
-    /** Simple rounding function to specified decimal place
-     *  @param k: double to be rounded
-     *  @param decimalPlace: specifies the decimal place for rounding
-     *  @return double rounded number
-    **/
-    public static double round(double k, int decimalPlace){
-        return Math.round(k*Math.pow(10,decimalPlace) )/Math.pow(10,decimalPlace);
-    }
+   
 
     /** Simple Gpa calculator supporting missing values
      * @param student_grades: array containing only grades/missing grades !no student index!  
@@ -367,7 +380,7 @@ public class App{
     /** method returning array of Cum Ludge students 
      * @param graduate_grades: no support for missing values  
      * @return integer array
-    **/
+    */
     public static int[] Cum_Laude_Graduates (double[][] graduate_grades ){
         double[] temp = new double[10000];
         int num_of_honors=0;
@@ -383,61 +396,11 @@ public class App{
     /** finding similarities between courses 
      * @param 
      * @return integer array
-    **/
-    public static double[] Comparing_Courses(double[][] studentGradesArray,int num_of_courses){
-        double[] temp = new double[3];
-        //--- graduated grades ---
-        double[] means_of_courses = new double[num_of_courses];
-        //getting all mean values for every course
-        for(int i=0; i< num_of_courses;i++){
-            //MMS_Course gives {mean, median, spread}
-            means_of_courses[i]=MMS_Course(studentGradesArray, i)[0]; 
-        }
-        //comparing every course with each other
-        //creating 2d array where collumns and rows are courses 
-        //it contains similarity value (how similiar 2 courses are on scale 0-10) based on mean
-        //formula 10 - |course1-course2|
-        // the higher value from forumla the more similar/related courses are in terms of their mean
+    */
 
-         double[][] course_mean_similarity = new double[num_of_courses][num_of_courses];
-        for(int course_1=0;course_1<num_of_courses; course_1++){
-            for(int course_2=0;course_2<num_of_courses;course_2++){
-                if(course_1!=course_2){
-                    // assingning rounded output (2decimal places) of forumla
-                    course_mean_similarity[course_1][course_2]=  Math.round((10-Math.abs(means_of_courses[course_1]-means_of_courses    [course_2]))*Math.pow(10,2) )/Math.pow(10,2);
-                }else{
-                    // same course
-                    course_mean_similarity[course_1][course_2]=10; 
-                }
-            }
-        }
-        // to continue (finding  most simillar means when the overall mean of courses is small )
-        System.out.println(Arrays.deepToString(course_mean_similarity));
-        
-        //--- current grades ---
-        return temp;
-    }
-    /** reuseable simple array prase int->double double->int
-     * @param double_array/int_array: arrays of int or double type
-     * @return prased array
-    **/
-    public static int[] Array_Double_To_Int(double[] double_array){
-        int[] int_array = new int[double_array.length];
-        for(int i=0;i<double_array.length;i++){
-            int_array [i] = (int)double_array[i];
-        }
-        return int_array;
-    }
-    public static double[] Array_Int_To_Double(int[] int_array){
-        double[] double_array = new double[int_array.length];
-        for(int i=0;i<int_array.length;i++){
-            double_array [i] = (double)int_array[i];
-        }
-        return double_array;
-    }
 
-    
-    /** used in other method
+
+  /** used in other method
      * @param courseA first course
      * @param courseB second course
      * @param students_grades: a 2D-array containing studentID and grades
@@ -459,19 +422,61 @@ public class App{
 
     /** finding similarities between courses
      * @param students_grades: a 2D-array containing studentID and grades
-     * @param numOfCourses number fo courses in the array
+     * @param numOfCourses number of courses in the array
      * @return 2D array with values of type double that indicate similarity
     */
     public static double[][] Similarity_Array(double[][] studentGradesArray, int numOfCourses){
         double[][] array = new double[numOfCourses][numOfCourses];
         for(int A=0; A<numOfCourses; A++){
             for(int B=A; B<numOfCourses; B++){
-                double similarity = Course_Similarity(studentGradesArray, A, B);
+                double similarity = round(Course_Similarity(studentGradesArray, A, B),2);
                 array[A][B] = similarity;
                 array[B][A] = similarity;
             }
         }
+        
         return array;
     }
 
+     /*
+     * 
+     * STEP 2
+     *  
+     * 
+     */
+
+
+    /*
+     * 
+     *  SIMPLE OFTEN USED METHODS
+     * 
+     */
+
+    /** reuseable simple array prase int->double double->int
+     * @param double_array/int_array: arrays of int or double type
+     * @return prased array
+    **/
+    public static int[] Array_Double_To_Int(double[] double_array){
+        int[] int_array = new int[double_array.length];
+        for(int i=0;i<double_array.length;i++){
+            int_array [i] = (int)double_array[i];
+        }
+        return int_array;
+    }
+    public static double[] Array_Int_To_Double(int[] int_array){
+        double[] double_array = new double[int_array.length];
+        for(int i=0;i<int_array.length;i++){
+            double_array [i] = (double)int_array[i];
+        }
+        return double_array;
+    }
+     /** Simple rounding function to specified decimal place
+     *  @param k: double to be rounded
+     *  @param decimalPlace: specifies the decimal place for rounding
+     *  @return double rounded number
+    **/
+    public static double round(double k, int decimalPlace){
+        return Math.round(k*Math.pow(10,decimalPlace) )/Math.pow(10,decimalPlace);
+    }
 }
+
