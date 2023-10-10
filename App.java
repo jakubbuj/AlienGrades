@@ -435,4 +435,43 @@ public class App{
         }
         return double_array;
     }
+
+    
+    /** used in other method
+     * @param courseA first course
+     * @param courseB second course
+     * @param students_grades: a 2D-array containing studentID and grades
+     * @return double from 0-10 to indicate similarity
+     */ 
+    public static double Course_Similarity(double[][] studentGradesArray, int courseA, int courseB){
+
+        double differenceSum = 0;
+        int numOfStudents = 0;
+        for(double[] student: studentGradesArray){
+            if(student!=null&&student[courseA]!=-1&&student[courseB]!=-1){
+                numOfStudents++;
+                differenceSum += Math.abs(student[courseA] - student[courseB]);
+            }
+        }
+        if(numOfStudents==0){return -1;}
+        return 10 - round(differenceSum/numOfStudents, 2);
+    }
+
+    /** finding similarities between courses
+     * @param students_grades: a 2D-array containing studentID and grades
+     * @param numOfCourses number fo courses in the array
+     * @return 2D array with values of type double that indicate similarity
+    */
+    public static double[][] Similarity_Array(double[][] studentGradesArray, int numOfCourses){
+        double[][] array = new double[numOfCourses][numOfCourses];
+        for(int A=0; A<numOfCourses; A++){
+            for(int B=A; B<numOfCourses; B++){
+                double similarity = Course_Similarity(studentGradesArray, A, B);
+                array[A][B] = similarity;
+                array[B][A] = similarity;
+            }
+        }
+        return array;
+    }
+
 }
