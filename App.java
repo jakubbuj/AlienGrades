@@ -243,7 +243,7 @@ public class App{
     // answers  step 1
     System.out.println("Hardest coures: ");
     System.out.println("Easiest coures: ");
-    System.out.println("list of best students: "+cl_student_id);
+    System.out.println("list of best students: "+Arrays.toString(cl_student_id));
     System.out.println("Most similar courses: ");
 
     }
