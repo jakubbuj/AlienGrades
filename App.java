@@ -297,50 +297,57 @@ public class App{
         }
     }
 
-    /**calculates the mean, median and spread for a course
-     * @param course: index of the grade corresponding to the course for a student
-     * @return double array: containing {mean, median, spread}
-    **/
-    public static double[] MMS_Course(double[][] studentGradesArray, int course){
-        double[] mms = new double[3]; 
-        int numOfStudents = studentGradesArray.length;
+    /**calculates the mean, median and spread for a course with support for missing values
+    * @param students_grades: a 2D-array containing studentID and grades
+    * @param course: index of the grade corresponding to the course for a student
+    * @return double array: containing {mean, median, spread}
+    */
+    public static double[] MMS_Course(double[][] students_grades, int course){
+        double[] mms = {-1.0, -1.0, -1.0};
+        int numOfstudents = 0;
+        double[] courseGrades = new double[0];
 
-        //puts all grades for one course in a single array
-        double[] courseGrades = new double[numOfStudents];
-        for(int i=0; i<numOfStudents; i++){
-            courseGrades[i] = studentGradesArray[i][course];
+        for (double[] student : students_grades) {
+            if(student==null||student[course]==-1){continue;}
+            numOfstudents++;
+            courseGrades = Arrays.copyOf(courseGrades, numOfstudents);
+            courseGrades[courseGrades.length-1] = student[course];
         }
+        Arrays.sort(courseGrades);
+        System.out.println(Arrays.toString(courseGrades));
+        if(numOfstudents==0)return mms;
+        
+        int len = courseGrades.length;
 
         //mean
-        double total=0;
-        for (double grade : courseGrades) {
-            total += grade;
+        double sum = 0;
+        for (double grade: courseGrades) {
+            sum += grade;
         }
-        double mean= total/numOfStudents;
-        mms[0] = mean;
+        mms[0] = round(sum/numOfstudents, 2);
 
-        //sorting array from lowest to highest grade (needed for median and spread)
-        Arrays.sort(courseGrades);
-        
         //median
         double median;
-        if(numOfStudents%2==0){ 
-            median =  courseGrades[numOfStudents/2];
-        }else{
-            int div2 = numOfStudents/2;
-            median = (courseGrades[div2] + courseGrades[div2-1])/2;
+        if(len%2==1){ //odd 
+            median =  courseGrades[courseGrades.length/2];
+        }else{  //even 
+            median = (courseGrades[len/2] + courseGrades[len/2-1])/2;
         } 
-        mms[1] = median;
-        
-        //spread
-        double min = courseGrades[0];
-        double max = courseGrades[numOfStudents-1];
-        double spread = max - min;
-        mms[2] = spread;
+        mms[1] = round(median, 2);
+
+        mms[2] = round(courseGrades[len-1] - courseGrades[0], 2);
 
         return mms;
     }
 
+    /** Simple rounding function to specified decimal place
+     *  @param k: double to be rounded
+     *  @param decimalPlace: specifies the decimal place for rounding
+     *  @return double rounded number
+    **/
+    public static double round(double k, int decimalPlace){
+        return Math.round(k*Math.pow(10,decimalPlace) )/Math.pow(10,decimalPlace);
+    }
 
     /** Simple Gpa calculator supporting missing values
      * @param student_grades: array containing only grades/missing grades !no student index!  
@@ -355,7 +362,7 @@ public class App{
                 sum+=grade;
             }
         }
-        return Math.round((sum/student_grades.length)*Math.pow(10,decimal_places))/Math.pow(10,decimal_places);
+        return round((sum/student_grades.length), 2);
     }
     /** method returning array of Cum Ludge students 
      * @param graduate_grades: no support for missing values  
@@ -397,7 +404,7 @@ public class App{
             for(int course_2=0;course_2<num_of_courses;course_2++){
                 if(course_1!=course_2){
                     // assingning rounded output (2decimal places) of forumla
-                    course_mean_similarity[course_1][course_2]=  Math.round((10-Math.abs(means_of_courses[course_1]-means_of_courses[course_2]))*Math.pow(10,2) )/Math.pow(10,2);
+                    course_mean_similarity[course_1][course_2]=  Math.round((10-Math.abs(means_of_courses[course_1]-means_of_courses    [course_2]))*Math.pow(10,2) )/Math.pow(10,2);
                 }else{
                     // same course
                     course_mean_similarity[course_1][course_2]=10; 
