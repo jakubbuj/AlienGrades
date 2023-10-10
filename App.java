@@ -8,9 +8,10 @@ public class App{
         //arrays 
         double[][] graduate_grades = File_To_Array("GraduateGrades.csv");
         double[][] current_grades = File_To_Array("CurrentGrades.csv");
+       
 
        //use if you have werid bug wiht 0.0's in graduate grades. the error is located in File_To_Array - hasNextDouble
-        /* 
+/*         
         double[][] graduate_grades={
             {8.0, 8.0, 7.0, 8.0, 6.0, 7.0, 9.0, 7.0, 8.0, 6.0, 6.0, 9.0, 10.0, 8.0, 6.0, 10.0, 7.0, 9.0, 10.0, 8.0, 6.0, 8.0, 6.0, 6.0, 6.0, 9.0, 6.0, 6.0, 6.0, 8.0},
             {10.0, 10.0, 10.0,10.0,10.0,10.0,10.0,10.0,10.0,10.0,10.0,10.0,10.0,10.0,10.0,10.0,10.0,10.0,10.0,10.0,10.0,10.0,10.0,10.0,10.0,10.0,10.0,10.0,10.0,10.0,}, //cum laudge
@@ -214,14 +215,15 @@ public class App{
             {-1.0, 7.0, -1.0, -1.0, -1.0, -1.0, -1.0, -1.0, -1.0, -1.0, -1.0, -1.0, -1.0, 6.0, -1.0, 7.0, -1.0, 6.0, -1.0, -1.0, 7.0, -1.0, -1.0, -1.0, -1.0, 7.0, 7.0, -1.0, -1.0, -1.0},
             {-1.0, 8.0, -1.0, -1.0, -1.0, -1.0, -1.0, -1.0, -1.0, -1.0, -1.0, -1.0, -1.0, 8.0, -1.0, 9.0, -1.0, 7.0, -1.0, -1.0, 9.0, -1.0, -1.0, -1.0, -1.0, 7.0, 8.0, -1.0, -1.0, -1.0},            
 
-        };
-        */
+        }; */
+        
+        int number_of_courses = graduate_grades[0].length;
 
         int[] cl_student_id = Cum_Laude_Graduates(graduate_grades);
         
-        
+        /* 
         //only used for printing the arrays  (id's are not not the ones from csv for currentGrades);
-       
+        System.out.println("number of courses: "+number_of_courses);
         System.out.println("graduate_grades for id's: \n");
         for(int i=0; i<graduate_grades.length; i++){
             if(graduate_grades[i] == null){continue;}
@@ -234,8 +236,8 @@ public class App{
 		}
         System.out.println("\n\n");
         System.out.println("Cum Laudge student's id:\n" +Arrays.toString(cl_student_id));
-    
-
+    */
+        Comparing_Courses(graduate_grades,number_of_courses);
     }
 
     public static double[][] File_To_Array(String fileName){
@@ -273,7 +275,6 @@ public class App{
             		} else if (lineScanner.hasNextDouble()) {
             			double d = lineScanner.nextDouble();
                         studentGradesArray[studentID][courseIndex]=d;
-                        System.out.println(studentID);
                         courseIndex++;
             		} else {
             			String s = lineScanner.next();
@@ -309,7 +310,6 @@ public class App{
         for(int i=0; i<numOfStudents; i++){
             courseGrades[i] = studentGradesArray[i][course];
         }
-        System.out.println(Arrays.toString(courseGrades));
 
         //mean
         double total=0;
@@ -370,11 +370,46 @@ public class App{
                     num_of_honors++;
                 }
             }
-        System.out.println(Arrays.toString(temp));
         int[] honored_students_id = Array_Double_To_Int(Arrays.copyOf(temp, num_of_honors));
         return honored_students_id;
     }
+    /** finding similarities between courses 
+     * @param 
+     * @return integer array
+    **/
+    public static double[] Comparing_Courses(double[][] studentGradesArray,int num_of_courses){
+        double[] temp = new double[3];
+        //--- graduated grades ---
+        double[] means_of_courses = new double[num_of_courses];
+        //getting all mean values for every course
+        for(int i=0; i< num_of_courses;i++){
+            //MMS_Course gives {mean, median, spread}
+            means_of_courses[i]=MMS_Course(studentGradesArray, i)[0]; 
+        }
+        //comparing every course with each other
+        //creating 2d array where collumns and rows are courses 
+        //it contains similarity value (how similiar 2 courses are on scale 0-10) based on mean
+        //formula 10 - |course1-course2|
+        // the higher value from forumla the more similar/related courses are in terms of their mean
 
+         double[][] course_mean_similarity = new double[num_of_courses][num_of_courses];
+        for(int course_1=0;course_1<num_of_courses; course_1++){
+            for(int course_2=0;course_2<num_of_courses;course_2++){
+                if(course_1!=course_2){
+                    // assingning rounded output (2decimal places) of forumla
+                    course_mean_similarity[course_1][course_2]=  Math.round((10-Math.abs(means_of_courses[course_1]-means_of_courses[course_2]))*Math.pow(10,2) )/Math.pow(10,2);
+                }else{
+                    // same course
+                    course_mean_similarity[course_1][course_2]=10; 
+                }
+            }
+        }
+        // to continue (finding  most simillar means when the overall mean of courses is small )
+        System.out.println(Arrays.deepToString(course_mean_similarity));
+        
+        //--- current grades ---
+        return temp;
+    }
     /** reuseable simple array prase int->double double->int
      * @param double_array/int_array: arrays of int or double type
      * @return prased array
