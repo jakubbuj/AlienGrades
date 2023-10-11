@@ -407,9 +407,9 @@ public class App{
                 //median
                 Arrays.sort(studentGrades);
                 double median;
-                if (amountOfCourses % 2 == 1) { // Odd
+                if (amountOfCourses % 2 == 1) { // if an amount is odd 
                     median = studentGrades[amountOfCourses / 2];
-                } else { // Even
+                } else { // if an amount id even 
                     median = (studentGrades[amountOfCourses / 2 - 1] + studentGrades[amountOfCourses / 2]) / 2;
                 }
                 mmsForStudent[1] = median;
