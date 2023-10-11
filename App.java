@@ -473,6 +473,104 @@ public class App{
      * 
      */
 
+     
+    public static boolean[][] Missing_Grades_Table(double[][] studentGradesArray){
+        boolean[][] studentGradesPresent = new boolean[0][];
+        int groups  = 0;
+
+        for(double[] student : studentGradesArray){
+            if(student == null){continue;}
+            //convert students grades into array which marks courses as graded 
+            boolean[] hasGrade = new boolean[student.length]; //stores if student has grade for course or not
+            for(int course=0; course<student.length; course++){
+                if(student[course]!=-1){
+                    hasGrade[course] = true;
+                }
+            }
+
+            //checks if hasGrade isnt already in studentGradesPresent
+            boolean same = false;
+            for(boolean[] group : studentGradesPresent){ 
+                if(Arrays.equals(group, hasGrade)){
+                    same = true;
+                }
+            }
+            if(!same){
+                groups++;
+                studentGradesPresent = Arrays.copyOf(studentGradesPresent, groups);
+                studentGradesPresent[groups-1] = hasGrade;
+            }
+        }    
+        return studentGradesPresent;       
+    }
+
+    public static int[] Index_Sort(int[] array){
+        double[] temp = new double[array.length];
+
+        for(int index=0; index<array.length; index++){
+            temp[index] = array[index] + index/100.0; 
+        }
+        
+        Arrays.sort(temp);
+
+        int[] printOrder = new int[temp.length];
+        for (int i=0; i<temp.length; i++) {
+            double d = temp[i];
+            int p = (int) Math.round((d - (int) d) *100);
+            printOrder[i] = p;
+        }
+        return printOrder;
+    }
+
+    //counts the students that have a grade for a course and returns the courses sorted
+    public static int[] Students_Per_Course(double[][] studentGradesArray){
+        int len = studentGradesArray.length;
+        int number_of_courses = studentGradesArray[len-1].length;
+        int[] student_per_course = new int[number_of_courses];
+
+        for(int course=0; course<number_of_courses; course++){
+            for (double[] student : studentGradesArray) {
+                if(student!=null && student[course]!=-1){
+                    student_per_course[course]++;
+                }
+            }
+        }
+        return Index_Sort(student_per_course);
+
+        //return array_Sort_By_Column(Array_To_2Darray(student_per_course), 0);
+    }
+
+    public static void Print_Missing_Grades_Sorted(boolean[][] missing_grade_table, String[] courseArray){
+
+        //stores the amount of grades there are per course
+        int[] num_of_grades = new int[missing_grade_table[0].length]; 
+        for(int course=0; course<missing_grade_table[0].length; course++){
+            for (int group=0; group<missing_grade_table.length; group++) {
+                if(missing_grade_table[group][course]==true){
+                    num_of_grades[course]++;
+                }
+            }
+        }
+        
+        //sorts courses based on the amount of grades
+        int[] printOrder = Index_Sort(num_of_grades);
+        
+        System.out.println("\n\nGroups of students classified based on what courses are graded:\n");
+        for(int course : printOrder){
+            System.out.print(courseArray[course]+ " | ");
+            for (boolean[] group : missing_grade_table) {
+                if(group[course]){
+                    System.out.print(" # ");
+                } else {
+                    System.out.print(" - ");
+                }
+                
+            }
+            System.out.println();
+        }
+        System.out.println();
+    }
+
 
     /*
      * 
