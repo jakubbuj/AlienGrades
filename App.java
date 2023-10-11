@@ -217,14 +217,17 @@ public class App{
 
         }; 
         
+        //MMS_Student  HERE PUT A DESIRED STUDENT ID
+        
         int studentID = 1; // Replace with the student ID you want to calculate statistics for
         
-                double[] studentStatistics = MMS_Student(graduateGrades, studentID);
-        
+                double[] studentStatistics = MMS_Student(graduate_grades, studentID);
+
+                System.out.println("\n");
                 System.out.println("Statistics for Student ID " + studentID + ": ");
                 System.out.println("Mean: " + studentStatistics[0]);
                 System.out.println("Median: " + studentStatistics[1]);
-                System.out.println("Standard Deviation: " + studentStatistics[2]);
+                System.out.println("Standard Deviation: " + studentStatistics[2] + "\n");
 
                 
         int number_of_courses = graduate_grades[0].length;
@@ -378,10 +381,11 @@ public class App{
 
         return mms;
     }
-    public static double[] MMS_Student(double[][] graduateGrades, int studentID) { 
-    // to use this method you need to specify in main method for which student you would like to print MMS_Student for
+    public static double[] MMS_Student(double[][] graduate_grades, int studentID) { 
+    // to use this method you need to specify in main method for which student you would like to print MMS_Student for. 
+    // Change a studentID at line of code nr. 222 (at the time of updating code)
                 
-                int amountOfCourses = graduateGrades[0].length;
+                int amountOfCourses = graduate_grades[0].length;
                 double[] mmsForStudent = new double[3];
         
                 // Create an array to store the grades of the specified student
@@ -389,7 +393,7 @@ public class App{
                 
                 // Copy the student's grades
                 for (int j = 0; j < amountOfCourses; j++) {
-                    studentGrades[j] = graduateGrades[studentID][j];
+                    studentGrades[j] = graduate_grades[studentID][j];
                 }
         
                 //mean 
