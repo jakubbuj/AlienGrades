@@ -221,8 +221,8 @@ public class App{
 
         int[] cl_student_id = Cum_Laude_Graduates(graduate_grades);
         
-        System.out.println(Arrays.deepToString(Similarity_Array(graduate_grades, number_of_courses)));
-        System.out.println(Arrays.deepToString(Similarity_Array(current_grades, number_of_courses)));
+       // System.out.println(Arrays.deepToString(Similarity_Array(graduate_grades, number_of_courses)));
+        //System.out.println(Arrays.deepToString(Similarity_Array(current_grades, number_of_courses)));
         /* 
         //only used for printing the arrays  (id's are not not the ones from csv for currentGrades);
         System.out.println("number of courses: "+number_of_courses);
@@ -243,9 +243,10 @@ public class App{
     // answers  step 1
     System.out.println("Hardest coures: ");
     System.out.println("Easiest coures: ");
-    System.out.println("list of best students: "+Arrays.toString(cl_student_id));
+    System.out.println("Number of students with Cum Ludge: "+cl_student_id.length);
+    System.out.println("Their ID's : "+Arrays.toString(cl_student_id));
     System.out.println("Most similar courses: ");
-
+    Comparing_Courses(Similarity_Array(graduate_grades, number_of_courses),graduate_grades,number_of_courses);
     }
 
     public static double[][] File_To_Array(String fileName){
@@ -382,15 +383,26 @@ public class App{
      * @return integer array
     */
     public static int[] Cum_Laude_Graduates (double[][] graduate_grades ){
-        double[] temp = new double[10000];
+        
         int num_of_honors=0;
-            for(int i=0; i<graduate_grades.length;i++){
-                if(Calc_GPA(graduate_grades[i])>=8.00){
-                    temp[num_of_honors]=i;
-                    num_of_honors++;
-                }
+        // checking number of the honored students
+        for(int i=0; i<graduate_grades.length;i++){
+            if(Calc_GPA(graduate_grades[i])>=8.00){
+                num_of_honors++;
             }
+        }
+        double[] temp = new double[num_of_honors];
+        num_of_honors=0;
+        for(int i=0; i<graduate_grades.length;i++){
+            System.out.println("graduate grades mean: "+Calc_GPA(graduate_grades[i]));
+            if(Calc_GPA(graduate_grades[i])>=8.00){
+                System.out.println("honor means: "+Calc_GPA(graduate_grades[i]));
+                temp[num_of_honors]=i;
+                num_of_honors++;
+            }
+        }
         int[] honored_students_id = Array_Double_To_Int(Arrays.copyOf(temp, num_of_honors));
+        System.out.println(Arrays.toString(honored_students_id));
         return honored_students_id;
     }
     /** finding similarities between courses 
@@ -431,13 +443,23 @@ public class App{
             for(int B=A; B<numOfCourses; B++){
                 double similarity = round(Course_Similarity(studentGradesArray, A, B),2);
                 array[A][B] = similarity;
-                array[B][A] = similarity;
+                array[B][A]  =similarity;
             }
         }
         
         return array;
     }
-
+    public static double[][] Comparing_Courses( double[][] similarity_array,double[][] studentGradesArray, int numOfCourses){
+        double[][] array = new double[0][];
+        // Similarity divides
+        for(double[] row:similarity_array){
+           // to finish
+            
+        }
+      
+        
+        return array;
+    }
      /*
      * 
      * STEP 2
