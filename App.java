@@ -337,7 +337,7 @@ public class App{
         Arrays.sort(courseGrades);
         //System.out.println(Arrays.toString(courseGrades));
         if(numOfstudents==0)return mms;
-        
+
         int len = courseGrades.length;
 
         //mean
@@ -345,6 +345,7 @@ public class App{
         for (double grade: courseGrades) {
             sum += grade;
         }
+        double mean = sum/numOfstudents;
         mms[0] = round(sum/numOfstudents, 2);
 
         //median
@@ -356,12 +357,17 @@ public class App{
         } 
         mms[1] = round(median, 2);
 
-        mms[2] = round(courseGrades[len-1] - courseGrades[0], 2);
+        // standard deviation
+        double deviation = 0;
+        for (double grade: courseGrades) {
+            deviation += (grade - mean) * (grade - mean);
+        }
+        deviation = Math.sqrt( (deviation / mean) );
+
+        mms[2] = round(deviation, 2);
 
         return mms;
     }
-
-   
 
     /** Simple Gpa calculator supporting missing values
      * @param student_grades: array containing only grades/missing grades !no student index!  
