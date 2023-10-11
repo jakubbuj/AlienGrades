@@ -217,6 +217,16 @@ public class App{
 
         }; 
         
+        int studentID = 1; // Replace with the student ID you want to calculate statistics for
+        
+                double[] studentStatistics = MMS_Student(graduateGrades, studentID);
+        
+                System.out.println("Statistics for Student ID " + studentID + ": ");
+                System.out.println("Mean: " + studentStatistics[0]);
+                System.out.println("Median: " + studentStatistics[1]);
+                System.out.println("Standard Deviation: " + studentStatistics[2]);
+
+                
         int number_of_courses = graduate_grades[0].length;
 
         int[] cl_student_id = Cum_Laude_Graduates(graduate_grades);
@@ -368,6 +378,48 @@ public class App{
 
         return mms;
     }
+    public static double[] MMS_Student(double[][] graduateGrades, int studentID) { 
+    // to use this method you need to specify in main method for which student you would like to print MMS_Student for
+                
+                int amountOfCourses = graduateGrades[0].length;
+                double[] mmsForStudent = new double[3];
+        
+                // Create an array to store the grades of the specified student
+                double[] studentGrades = new double[amountOfCourses];
+                
+                // Copy the student's grades
+                for (int j = 0; j < amountOfCourses; j++) {
+                    studentGrades[j] = graduateGrades[studentID][j];
+                }
+        
+                //mean 
+                double sum = 0;
+                for (double grade : studentGrades) {
+                    sum += grade;
+                }
+                double mean = sum / amountOfCourses;
+                    mmsForStudent[0] = mean;
+                
+                //median
+                Arrays.sort(studentGrades);
+                double median;
+                if (amountOfCourses % 2 == 1) { // Odd
+                    median = studentGrades[amountOfCourses / 2];
+                } else { // Even
+                    median = (studentGrades[amountOfCourses / 2 - 1] + studentGrades[amountOfCourses / 2]) / 2;
+                }
+                mmsForStudent[1] = median;
+                
+                //standard deviation
+                double deviation = 0;
+                for (double grade : studentGrades) {
+                    deviation += (grade - mean) * (grade - mean);
+                }
+                deviation = Math.sqrt(deviation / amountOfCourses);
+                mmsForStudent[2] = deviation;
+        
+                return mmsForStudent;
+            }
 
     /** Simple Gpa calculator supporting missing values
      * @param student_grades: array containing only grades/missing grades !no student index!  
