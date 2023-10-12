@@ -726,6 +726,68 @@ public class App{
         System.out.println();
     }
 
+        //check for students who are going to graduate soon
+    public static int[] Soon_Graduates(double[][] studentGradesArray){
+        //requirements for graduating:
+        int required_courses_passed = 25; 
+
+        int grads = 0;
+        int[] soon_graduates = new int[grads];
+
+        //looping over students and checking requirements\
+        
+        for(int i=0;  i<studentGradesArray.length; i++){
+            double[] student = studentGradesArray[i];
+            double passing_grade = 6.0;
+            int courses_passed = 0;
+
+            if(student!=null){
+                for (double course : student) {
+                    if(course >= passing_grade){
+                        courses_passed++;
+                    }
+                }
+                if(courses_passed>=required_courses_passed){
+                    grads++;
+                    soon_graduates = Arrays.copyOf(soon_graduates, grads);
+                    soon_graduates[grads-1] = i;
+                }
+            }
+        }
+        System.out.println("# of graduates: "+ grads);
+        return soon_graduates;
+        
+    }
+
+    //looks for students that are eligible to graduate (no failed courses)
+    public static int[] Eligible_To_Graduate(double[][] studentGradesArray){
+        double passing_grade = 6.0;
+        int eligible = 0;
+        int[] eligibleID = new int[eligible];
+
+        for(int i=0;  i<studentGradesArray.length; i++){
+            double[] student = studentGradesArray[i];
+
+            if(student!=null){
+                boolean all_passed = true;
+                for (int course=0; course<student.length && all_passed; course++) {
+                    double grade = student[course];
+                    if(grade < passing_grade && grade != -1){
+                        all_passed = false;
+                    }
+                }
+                if(all_passed){
+                    eligible++;
+                    eligibleID = Arrays.copyOf(eligibleID, eligible);
+                    eligibleID[eligible-1] = i;
+                }
+            }
+            
+        }
+        return eligibleID;
+    }
+
+
 
     /*
      * 
