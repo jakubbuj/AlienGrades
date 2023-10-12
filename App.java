@@ -1,6 +1,7 @@
 import java.io.File;
 import java.util.Arrays;
 import java.util.Scanner;
+import java.util.List;
 
 public class App{
 
@@ -287,6 +288,9 @@ public class App{
     System.out.println("Their ID's : "+Arrays.toString(cl_student_id));
     System.out.println("Most similar courses: ");
     Comparing_Courses(Similarity_Array(graduate_grades, number_of_courses),graduate_grades,number_of_courses);
+      double[][] transposedArray = TransposeCurrentGradesArray(graduate_grades);
+    relatedCourses(transposedArray);
+    CorrelationMatrix(transposedArray);
     }
 
     public static double[][] File_To_Array(String fileName){
@@ -713,6 +717,156 @@ public class App{
         }
         return five_easiest;
     }
+
+    
+      /** finding similarities between courses via pearson correlation : Class Correlation analysis
+     * *
+    */
+    
+   public static double calculateMean(double[] values) {
+    double sum = 0.0;
+    double[] var3 = values;
+    int var4 = values.length;
+
+    for(int var5 = 0; var5 < var4; ++var5) {
+       double value = var3[var5];
+       sum += value;
+    }
+
+    return sum / (double)values.length;
+ }
+
+ public static double calculatingPearsonCorrelation(double[] x, double[] y) {
+    double meanX = calculateMean(x);
+    double meanY = calculateMean(y);
+    int n = x.length;
+    double sumXY = 0.0;
+    double sumXX = 0.0;
+    double sumYY = 0.0;
+
+    for(int i = 0; i < n; ++i) {
+       double xMinusMean = x[i] - meanX;
+       double yMinusMean = y[i] - meanY;
+       sumXY += xMinusMean * yMinusMean;
+       sumXX += xMinusMean * xMinusMean;
+       sumYY += yMinusMean * yMinusMean;
+    }
+    double correlation = sumXY / (Math.sqrt(sumXX) * Math.sqrt(sumYY));
+    double roundedCorrelation = Math.round(correlation * 1000.0) / 1000.0;
+
+    return roundedCorrelation;
+    
+ }
+
+ public static double[][] TransposeCurrentGradesArray(double[][] students_grades) {
+    int rows = students_grades.length;
+    int columns = students_grades[0].length;
+    double[][] transposedArray = new double[columns][rows];
+
+    for(int i = 0; i < rows; ++i) {
+       for(int j = 0; j < columns; ++j) {
+          transposedArray[j][i] = students_grades[i][j];
+       }
+    }
+
+    return transposedArray;
+ }
+
+ public static void relatedCourses(double[][] transposedArray) {
+    int numCourses = transposedArray.length;
+
+    // Create a 2D array to store correlation information
+    String[][] correlationMatrix = new String[numCourses][numCourses];
+
+    for (int i = 0; i < numCourses; ++i) {
+        for (int j = i + 1; j < numCourses; ++j) {
+            double correlation = calculatingPearsonCorrelation(transposedArray[i], transposedArray[j]);
+            String correlationType = "";
+
+            if (correlation >= 0.8 && correlation <= 1.0) {
+                correlationType = "very strong";
+            } else if (correlation >= 0.6 && correlation < 0.8) {
+                correlationType = "strong";
+            } else if (correlation >= 0.4 && correlation < 0.6) {
+                correlationType = "moderate";
+            } else {
+                correlationType = "low";
+            }
+
+            correlationMatrix[i][j] = correlationType;
+        }
+    }
+
+    // Print the correlation matrix with course labels
+    List<String> courseLabels = Arrays.asList(
+        "JTE-234", "ATE-003", "TGL-013", "PPL-239", "WDM-974",
+        "GHL-823", "HLU-200", "MON-014", "FEA-907", "LPG-307",
+        "TSO-010", "LDE-009", "JJP-001", "MTE-004", "LUU-003",
+        "LOE-103", "PLO-132", "BKO-800", "SLE-332", "BKO-801",
+        "DSE-003", "DSE-005", "ATE-014", "JTW-004", "ATE-008",
+        "DSE-007", "ATE-214", "JHF-101", "KMO-007", "WOT-104"
+    );
+
+    for (int i = 0; i < numCourses; ++i) {
+        for (int j = i + 1; j < numCourses; ++j) {
+            String course1 = courseLabels.get(i);
+            String course2 = courseLabels.get(j);
+            String correlationType = correlationMatrix[i][j];
+            double correlation = calculatingPearsonCorrelation(transposedArray[i], transposedArray[j]);
+
+            System.out.println(course1 + " and " + course2 + ": " + correlationType + " = " + correlation);
+        }
+    }
+}
+
+public static void CorrelationMatrix(double[][] transposedArray) {
+    int numCourses = transposedArray.length;
+
+    double[][] correlationMatrix = new double[numCourses][numCourses];
+
+    // Fill the correlation matrix
+    for (int i = 0; i < numCourses; ++i) {
+        for (int j = 0; j < numCourses; ++j) {
+            double[] subject1 = new double[transposedArray.length];
+            double[] subject2 = new double[transposedArray.length];
+
+            for (int k = 0; k < transposedArray.length; ++k) {
+                subject1[k] = transposedArray[k][i];
+                subject2[k] = transposedArray[k][j];
+            }
+
+            double correlation = calculatingPearsonCorrelation(subject1, subject2);
+            correlationMatrix[i][j] = correlation;
+        }
+    }
+
+    // Print the correlation matrix
+    List<String> courseLabels = Arrays.asList(
+        "JTE-234", "ATE-003", "TGL-013", "PPL-239", "WDM-974",
+        "GHL-823", "HLU-200", "MON-014", "FEA-907", "LPG-307",
+        "TSO-010", "LDE-009", "JJP-001", "MTE-004", "LUU-003",
+        "LOE-103", "PLO-132", "BKO-800", "SLE-332", "BKO-801",
+        "DSE-003", "DSE-005", "ATE-014", "JTW-004", "ATE-008",
+        "DSE-007", "ATE-214", "JHF-101", "KMO-007", "WOT-104"
+    );
+
+    System.out.print("         ");
+
+    for (String label : courseLabels) {
+        System.out.printf("%-10s", label);
+    }
+    System.out.println("\n-----------------------------------------------");
+
+    for (int i = 0; i < numCourses; ++i) {
+        System.out.printf("%-8s | ", courseLabels.get(i));
+
+        for (int j = 0; j < numCourses; ++j) {
+            System.out.printf("%8.4f   ", correlationMatrix[i][j]);
+        }
+        System.out.println();
+    }
+}
+
 
      /*
      * 
