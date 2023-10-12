@@ -235,9 +235,10 @@ public class App{
         //         int[] selectedStudentIDs = {i, i + 1, i + 2}; // Get three consecutive students
         //         double[] commonStatistics = common_MMS(graduate_grades, selectedStudentIDs, selectedCourseIDs);
 
-        //         // Check if the standard deviation is smaller than 0.7
+        //              only available for graduate_grades
+        //         // Check if the standard deviation is smaller than 0.7 
         //         if (commonStatistics[2] < 0.7) {
-        //             // Potential fraud detected
+        //             // Potential fraud detected 
         //             System.out.println("Potential fraud detected for students: " + selectedStudentIDs[0] + ", " + selectedStudentIDs[1] + ", " + selectedStudentIDs[2]);
         //             System.out.println("Common Standard Deviation: " + commonStatistics[2]);
         //         }
@@ -481,28 +482,42 @@ public class App{
 
         //mean calculating
         double sum = 0;
-        for (double grade : studentGrades) {
-            sum += grade;
-        }
-        double mean = sum / amountOfCourses;
+                int grade_courses = 0;
+                for (double grade : studentGrades) {
+                    if(grade!=-1){
+                        sum += grade;
+                        grade_courses++;
+                    }
+                }
+        double mean = sum / grade_courses;
         mmsForStudent[0] = round(mean, 2); //assigning to a proper index in final results array
 
         //putting in ascending order for median calculating
         Arrays.sort(studentGrades);
         double median;
-        if (amountOfCourses % 2 == 1) {
-            median = studentGrades[amountOfCourses / 2];
+        grade_courses = 0; 
+        for (double grade : studentGrades) {
+                    if(grade!=-1){
+                        sum += grade;
+                        grade_courses++;}}
+        if (grade_courses % 2 == 1) {
+            median = studentGrades[grade_courses / 2];
         } else {
-            median = (studentGrades[amountOfCourses / 2 + 1] + studentGrades[amountOfCourses / 2]) / 2;
+            median = (studentGrades[grade_courses / 2 + 1] + studentGrades[grade_courses / 2]) / 2;
         }
         mmsForStudent[1] = round(median, 2); //assigning to a proper index in final results array 
 
         //deviation calculating
         double deviation = 0;
-        for (double grade : studentGrades) {
-            deviation += (grade - mean) * (grade - mean);
+        grade_courses = 0; 
+        for (double mark : studentGrades) {
+                    if(mark!=-1){
+                        sum += mark;
+                        grade_courses++;}}
+        for (double marks : studentGrades) {
+            deviation += (marks - mean) * (marks - mean);
         }
-        deviation = Math.sqrt(deviation / amountOfCourses);
+        deviation = Math.sqrt(deviation / grade_courses);
         mmsForStudent[2] = round(deviation, 2); //assigning to a proper index in final results array
 
         return mmsForStudent;
