@@ -215,7 +215,7 @@ public class App{
             {-1.0, 8.0, -1.0, -1.0, -1.0, -1.0, -1.0, -1.0, -1.0, -1.0, -1.0, -1.0, -1.0, 8.0, -1.0, 9.0, -1.0, 7.0, -1.0, -1.0, 9.0, -1.0, -1.0, -1.0, -1.0, 7.0, 8.0, -1.0, -1.0, -1.0},            
 
         }; 
-        
+        String[] courses_names = {"JTE-234", "ATE-003", "TGL-013", "PPL-239", "WDM-974", "GHL-823", "HLU-200", "MON-014", "FEA-907", "LPG-307", "TSO-010", "LDE-009", "JJP-001", "MTE-004", "LUU-003", "LOE-103", "PLO-132", "BKO-800", "SLE-332", "BKO-801", "DSE-003", "DSE-005", "ATE-014", "JTW-004", "ATE-008", "DSE-007", "ATE-214", "JHF-101", "KMO-007", "WOT-104"};
         // commented for possible use
         // MMS_Student method        
         // int studentID = 2; // Replace with the student ID you want to calculate statistics for
@@ -281,13 +281,11 @@ public class App{
     */
       
     // answers  step 1
-    System.out.println("Five hardest courses average grade: " + Arrays.toString(hardest_courses(graduate_grades)));
-    System.out.println("Five easiest courses average grade: " + Arrays.toString(easiest_courses(graduate_grades)));
     System.out.println("Number of students with Cum Ludge: "+cl_student_id.length);
     System.out.println("Their ID's : "+Arrays.toString(cl_student_id));
-    System.out.println("Most similar courses: ");
-    Comparing_Courses(Similarity_Array(graduate_grades, number_of_courses),graduate_grades,number_of_courses);
-        relatedCourses(graduate_grades);
+    Course_Difficulty_Level(graduate_grades,courses_names); // gives 5 hardest easiest courses with means
+    // Comparing_Courses(Similarity_Array(graduate_grades, number_of_courses),graduate_grades,number_of_courses);
+    //     relatedCourses(graduate_grades);
     }
 
     public static double[][] File_To_Array(String fileName){
@@ -588,9 +586,7 @@ public class App{
         double[] temp = new double[num_of_honors];
         num_of_honors=0;
         for(int i=0; i<graduate_grades.length;i++){
-            System.out.println("graduate grades mean: "+Calc_GPA(graduate_grades[i]));
             if(Calc_GPA(graduate_grades[i])>=8.00){
-                System.out.println("honor means: "+Calc_GPA(graduate_grades[i]));
                 temp[num_of_honors]=i;
                 num_of_honors++;
             }
@@ -672,32 +668,7 @@ public class App{
 
         return average; //return 1d array
     }
-    public static double[] hardest_courses(double[][] graduate_grades) {
-        double[] average = Course_Average(graduate_grades); // Use Arrays.sort to sort the array in ascending order
-        Arrays.sort(average);
-        double[] five_hardest = new double[5];
-
-        for (int i = 0; i < 5; i++) {
-            five_hardest[i] += average[i];
-        }
-        return five_hardest;
-    }
-    public static double[] easiest_courses(double[][] graduate_grades) {
-        double[] average = Course_Average(graduate_grades);// Use Arrays.sort to sort the array in ascending order
-        Arrays.sort(average);
-            for (int i = 0; i < average.length / 2; i++) {
-                double temp = average[i];
-                average[i] = average[average.length - 1 - i];
-                average[average.length - 1 - i] = temp;
-            }
-        double[] five_easiest = new double[5];
-
-        for (int i = 0; i < 5; i++) {
-            five_easiest[i] += average[i];
-        }
-        return five_easiest;
-    }
-
+  
     
       /** finding similarities between courses via pearson correlation : Class Correlation analysis
      * *
@@ -781,7 +752,38 @@ public class App{
      *  
      * 
      */
+    public static double[][] Course_Difficulty_Level(double[][] graduate_grades,String[] course_names){
+        
+        double[] average = Course_Average(graduate_grades);
+        double[][] sorted_average = Sort_With_Id(average,true);
+        double[] five_hardest = new double[5];
+        double[] five_hardest_Id = new double[5];
+        double[] five_easiest = new double[5];
+        double[] five_easiest_Id = new double[5];
 
+        for(int i=0;i<5;i++){
+            five_hardest[i]=sorted_average[0][average.length-i -1];
+            five_hardest_Id[i]=sorted_average[1][average.length-i -1];
+            five_easiest[i]=sorted_average[0][i];
+            five_easiest_Id[i]=sorted_average[1][i];
+        }
+        double[][] output = {};
+        for(int i=0;i<5;i++){
+           System.out.print(course_names[(int)five_hardest_Id[i]]+" , ");
+        }
+        System.out.println("Top five hardest courses:");
+        System.out.println("Their's average:");
+        System.out.println(Arrays.toString(five_hardest));
+        
+        System.out.println("Top five easiest courses:");
+         for(int i=0;i<5;i++){
+           System.out.print(course_names[(int)five_easiest_Id[i]]+" , ");
+        }
+        System.out.println("Their's average:");
+        System.out.println(Arrays.toString(five_easiest));
+
+        return output;
+    }
      
     public static boolean[][] Missing_Grades_Table(double[][] studentGradesArray){
         boolean[][] studentGradesPresent = new boolean[0][];
@@ -1019,9 +1021,6 @@ public class App{
             sorted_arr_w_id[0][i]= arr[i];
             sorted_arr_w_id[1][i]= id_arr[i];
         }
-        System.out.println(Arrays.toString(arr));
-        System.out.println(Arrays.toString(id_arr));
-        System.out.println(Arrays.deepToString(sorted_arr_w_id));
         return sorted_arr_w_id; 
     }
 }
