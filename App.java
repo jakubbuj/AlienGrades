@@ -281,8 +281,8 @@ public class App{
     */
       
     // answers  step 1
-    System.out.println("Hardest coures: ");
-    System.out.println("Easiest coures: ");
+    System.out.println("Five hardest courses average grade: " + Arrays.toString(hardest_courses(graduate_grades)));
+    System.out.println("Five easiest courses average grade: " + Arrays.toString(easiest_courses(graduate_grades)));
     System.out.println("Number of students with Cum Ludge: "+cl_student_id.length);
     System.out.println("Their ID's : "+Arrays.toString(cl_student_id));
     System.out.println("Most similar courses: ");
@@ -670,6 +670,50 @@ public class App{
         
         return array;
     }
+
+    public static double[] Course_Average(double[][] graduate_grades) {
+        double[] average = new double[graduate_grades[0].length]; //create an array for each average course grade
+        int courses = graduate_grades[0].length; //number of courses
+        int grades = graduate_grades.length; //number of grades for each course
+
+        for (int row = 0; row < courses; row++) {
+            for (int column = 0; column < grades; column++) {
+                average[row] += graduate_grades[column][row];
+            }
+        }
+
+        for (int row = 0; row < courses; row++) {
+            average[row] /= grades;
+        }
+
+        return average; //return 1d array
+    }
+    public static double[] hardest_courses(double[][] graduate_grades) {
+        double[] average = Course_Average(graduate_grades); // Use Arrays.sort to sort the array in ascending order
+        Arrays.sort(average);
+        double[] five_hardest = new double[5];
+
+        for (int i = 0; i < 5; i++) {
+            five_hardest[i] += average[i];
+        }
+        return five_hardest;
+    }
+    public static double[] easiest_courses(double[][] graduate_grades) {
+        double[] average = Course_Average(graduate_grades);// Use Arrays.sort to sort the array in ascending order
+        Arrays.sort(average);
+            for (int i = 0; i < average.length / 2; i++) {
+                double temp = average[i];
+                average[i] = average[average.length - 1 - i];
+                average[average.length - 1 - i] = temp;
+            }
+        double[] five_easiest = new double[5];
+
+        for (int i = 0; i < 5; i++) {
+            five_easiest[i] += average[i];
+        }
+        return five_easiest;
+    }
+
      /*
      * 
      * STEP 2
