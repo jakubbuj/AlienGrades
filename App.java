@@ -514,9 +514,6 @@ public class App{
                 double roundedMean = round(mean, 2);
                 double roundedDeviation = round(deviation, 2);
 
-                // mmsForStudent[0] = roundedMean;
-                // mmsForStudent[2] = roundedDeviation;
-
                 return mmsForStudent;
                         }
 
