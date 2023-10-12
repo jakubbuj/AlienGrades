@@ -217,32 +217,33 @@ public class App{
         }; 
         
         // commented for possible use
-
-        //MMS_Student  HERE PUT A DESIRED STUDENT ID
+        // MMS_Student method        
+        // int studentID = 2; // Replace with the student ID you want to calculate statistics for
         
-                // int studentID = 2; // Replace with the student ID you want to calculate statistics for
+        // double[] studentStatistics = MMS_Student(graduate_grades, studentID);
+
+        // System.out.println("\n" + "Statistics for Student ID " + studentID + ": ");
+        // System.out.println("Mean: " + studentStatistics[0]);
+        // System.out.println("Median: " + studentStatistics[1]);
+        // System.out.println("Standard Deviation: " + studentStatistics[2] + "\n");
         
-                // double[] studentStatistics = MMS_Student(graduate_grades, studentID);
         
-                // System.out.println("Statistics for Student ID " + studentID + ": ");
-                // System.out.println("Mean: " + studentStatistics[0]);
-                // System.out.println("Median: " + studentStatistics[1]);
-                // System.out.println("Standard Deviation: " + studentStatistics[2]);
+        // // Potential_Fraud
+        // int[] selectedCourseIDs = {0, 1, 2}; // Specify the course IDs you want to include in the analysis
 
-                // // Common stats 
-                // // Here specify which students to include in comparison!!
-                // int[] selectedStudentIDs = {3,4,5}; 
+        // for (int i = 0; i < graduate_grades.length -2; i++) {
+        //         int[] selectedStudentIDs = {i, i + 1, i + 2}; // Get three consecutive students
+        //         double[] commonStatistics = common_MMS(graduate_grades, selectedStudentIDs, selectedCourseIDs);
 
-                // double[] commonStatistics = common_MMS(graduate_grades, selectedStudentIDs);
+        //         // Check if the standard deviation is smaller than 0.7
+        //         if (commonStatistics[2] < 0.7) {
+        //             // Potential fraud detected
+        //             System.out.println("Potential fraud detected for students: " + selectedStudentIDs[0] + ", " + selectedStudentIDs[1] + ", " + selectedStudentIDs[2]);
+        //             System.out.println("Common Standard Deviation: " + commonStatistics[2]);
+        //         }
+        //     }
 
-                // System.out.println("\n");
-
-                // System.out.println("Common Statistics for Selected Students: " + Arrays.toString(selectedStudentIDs));
-                // System.out.println("Mean: " + commonStatistics[0]);
-                // System.out.println("Median: " + commonStatistics[1]);
-                // System.out.println("Standard Deviation: " + commonStatistics[2]);
-
-                // System.out.println("\n");
+        //    System.out.println("\n");
 
     
                 
@@ -464,107 +465,97 @@ public class App{
         return mms;
     }
     //MMS STUDENT ------------------------------------------------------------------------------------------------------------
+    /**calculates the mean, median and standard deviation for a student
+    * @param graduate_grades: a 2D-array containing studentID and grades
+    * @param studentID: index of the student for grade picking
+    * @return mean, median and standard deviation for a certain student 
+    */
 
+    public static double[] MMS_Student(double[][] graduate_grades, int studentID) {
+        int amountOfCourses = graduate_grades[studentID].length;
+        double[] mmsForStudent = new double[3];
 
-    public static double[] MMS_Student(double[][] graduate_grades, int studentID) { 
-                // to use this method you need to specify in main method for which student you would like to print MMS_Student for
-                            
-                int amountOfCourses = graduate_grades[studentID].length; // Determine the number of courses for the specified student
-                double[] mmsForStudent = new double[3];
-                    
-                // Create an array to store the grades of the specified student
-                double[] studentGrades = new double[amountOfCourses];
-                            
-                // Copy the student's grades
-                for (int j = 0; j < amountOfCourses; j++) {
-                    studentGrades[j] = graduate_grades[studentID][j];
-                }
-                    
-                //mean 
-                double sum = 0;
-                for (double grade : studentGrades) {
-                                sum += grade;
-                }
-                    double mean = sum / amountOfCourses;
-                    mmsForStudent[0] = round(mean,2);
-                
-                //median
-                Arrays.sort(studentGrades);
-                double median;
-                if (amountOfCourses % 2 == 1) { // if a number is odd
-                    median = studentGrades[amountOfCourses / 2];
-                }
-                else { // if a number is even 
-                    median = (studentGrades[amountOfCourses / 2 - 1] + studentGrades[amountOfCourses / 2]) / 2;
-                }
-                mmsForStudent[1] = round(median,2);
-                
-                //standard deviation
-                double deviation = 0;
-                for (double grade : studentGrades) {
-                    deviation += (grade - mean) * (grade - mean);
-                }
-                deviation = Math.sqrt(deviation / amountOfCourses);
-                mmsForStudent[2] = round(deviation,2 );
-                
-                double roundedMean = round(mean, 2);
-                double roundedDeviation = round(deviation, 2);
+        double[] studentGrades = new double[amountOfCourses];
 
-                return mmsForStudent;
-                        }
-
-
-
-/* MMS for common statistics of chosen students - calculates a commos MMS for students*/
-    
-    public static double[] common_MMS(double[][] graduate_grades, int[] selectedStudentIDs) {
-        int numSelectedStudents = selectedStudentIDs.length;
-        double[] commonStats = new double[3]; 
-        // Count the maximum number of courses among selected students
-        int maxCourses = 0;
-        for (int studentID : selectedStudentIDs) {
-            maxCourses = Math.max(maxCourses, graduate_grades[studentID].length);
+        for (int j = 0; j < amountOfCourses; j++) {
+            studentGrades[j] = graduate_grades[studentID][j];
         }
 
-        // Create arrays to store the selected students' grades
-        double[] selectedGrades = new double[numSelectedStudents * maxCourses];
+        //mean calculating
+        double sum = 0;
+        for (double grade : studentGrades) {
+            sum += grade;
+        }
+        double mean = sum / amountOfCourses;
+        mmsForStudent[0] = round(mean, 2); //assigning to a proper index in final results array
 
-        // mean - common mean for chosen students 
+        //putting in ascending order for median calculating
+        Arrays.sort(studentGrades);
+        double median;
+        if (amountOfCourses % 2 == 1) {
+            median = studentGrades[amountOfCourses / 2];
+        } else {
+            median = (studentGrades[amountOfCourses / 2 + 1] + studentGrades[amountOfCourses / 2]) / 2;
+        }
+        mmsForStudent[1] = round(median, 2); //assigning to a proper index in final results array 
+
+        //deviation calculating
+        double deviation = 0;
+        for (double grade : studentGrades) {
+            deviation += (grade - mean) * (grade - mean);
+        }
+        deviation = Math.sqrt(deviation / amountOfCourses);
+        mmsForStudent[2] = round(deviation, 2); //assigning to a proper index in final results array
+
+        return mmsForStudent;
+    }
+
+    
+    /**calculates the common mean, median and standard deviation for chosen student (we chose to just display standard deviation for pot. cheaters)
+    * @param graduate_grades: a 2D-array containing studentID and grades
+    * @param selectedStudentIDs: students that we will be checking for common standard deviation
+    * @param selectedCourseIDs: courses that we will take into consideration for these students 
+    * @return standard deviation for potentially cheating students 
+    */
+    public static double[] common_MMS(double[][] graduate_grades, int[] selectedStudentIDs, int[] selectedCourseIDs) {
+        int numSelectedStudents = selectedStudentIDs.length;
+        double[] commonStats = new double[3];
+        int maxCourses = selectedCourseIDs.length;
+
+        double[] selectedGrades = new double[numSelectedStudents * maxCourses];
         double sum = 0;
         int index = 0;
 
         for (int studentID : selectedStudentIDs) {
-            // adjusting a lenght of a row to the studentID to prevent "out of bounds"
-            int numCourses = graduate_grades[studentID].length; 
-            for (int j = 0; j < numCourses; j++) {
-                selectedGrades[index++] = graduate_grades[studentID][j];
-                sum += graduate_grades[studentID][j];
+            for (int courseID : selectedCourseIDs) {
+                if (courseID < graduate_grades[studentID].length) {
+                    selectedGrades[index++] = graduate_grades[studentID][courseID];
+                    sum += graduate_grades[studentID][courseID];
+                }
             }
         }
-        double commonMean = sum / (numSelectedStudents * maxCourses);
-        commonStats[0] = round(commonMean, 2); 
 
-        // common median 
+        double commonMean = sum / (numSelectedStudents * maxCourses);
+        commonStats[0] = round(commonMean, 2);
+
         Arrays.sort(selectedGrades);
         double commonMedian;
         if (selectedGrades.length % 2 == 1) {
             commonMedian = selectedGrades[selectedGrades.length / 2];
         } else {
-            commonMedian = (selectedGrades[selectedGrades.length / 2 - 1] + selectedGrades[selectedGrades.length / 2]) / 2;
+            commonMedian = ((selectedGrades[selectedGrades.length / 2 + 1] + selectedGrades[selectedGrades.length / 2]) / 2);
         }
-        commonStats[1] = commonMedian; 
+        commonStats[1] = round(commonMedian, 2);
 
-        // deviation between values 
         double commonDeviation = 0;
         for (double grade : selectedGrades) {
             commonDeviation += (grade - commonMean) * (grade - commonMean);
         }
         commonDeviation = Math.sqrt(commonDeviation / (numSelectedStudents * maxCourses));
-        commonStats[2] = round(commonDeviation,2); 
-        
-        return commonStats; 
-    }
+        commonStats[2] = round(commonDeviation, 2);
 
+        return commonStats;
+    }
 
     /** Simple Gpa calculator supporting missing values
      * @param student_grades: array containing only grades/missing grades !no student index!  
