@@ -344,6 +344,61 @@ public class App{
         }
     }
 
+    //reads a csv file with strings and converts it into a 2d array of type String
+     public static String[][] File_To_Array_String(String fileName){
+        try {
+            File file=new File(fileName);
+            Scanner fileScanner = new Scanner(file);
+
+            //added
+            String[][] student_info = new String[0][];
+            int length = 0;
+
+            int linesDone = 0;
+            while (fileScanner.hasNextLine()) {
+            	String line = fileScanner.nextLine();
+            	linesDone++;
+                
+                //added code
+                if(linesDone==1){
+                    continue;
+                }
+                List<String> propertyList = new ArrayList<String>();
+                int studentID = -1;
+
+            	// and one that scans the line entry per entry using the commas as delimiters
+            	Scanner lineScanner = new Scanner(line);
+                lineScanner.useDelimiter(",");
+            	while (lineScanner.hasNext()) {
+            		if (lineScanner.hasNextInt() && studentID==-1) {
+            			studentID = lineScanner.nextInt();
+            		} else {
+            			String s = lineScanner.next();
+                        propertyList.add(s);
+            		}
+            	}
+                //append propertylist to array
+                String[] property = propertyList.toArray(new String[0]);
+
+                if(studentID>=length){
+                    length= studentID+1;
+                }
+                student_info = Arrays.copyOf(student_info, length);
+                student_info[studentID] = property;
+            	lineScanner.close();
+            }
+            fileScanner.close();
+            //prints the grades array per row with student index
+
+            return student_info;
+            
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            return null;
+        }
+    }
+
+
 
 
      /*
