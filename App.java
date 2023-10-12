@@ -572,10 +572,6 @@ public class App{
         return commonStats; 
     }
 
-        public static double rounding(double value, int decimals) {
-        double multiplier = Math.pow(10, decimals);
-        return Math.round(value * multiplier) / multiplier;
-    }
 
     /** Simple Gpa calculator supporting missing values
      * @param student_grades: array containing only grades/missing grades !no student index!  
