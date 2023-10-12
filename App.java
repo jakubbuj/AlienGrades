@@ -229,6 +229,7 @@ public class App{
                 System.out.println("Median: " + studentStatistics[1]);
                 System.out.println("Standard Deviation: " + studentStatistics[2] + "\n");
 
+    
                 
         int number_of_courses = graduate_grades[0].length;
 
@@ -251,6 +252,16 @@ public class App{
 		}
         System.out.println("\n\n");
         System.out.println("Cum Laudge student's id:\n" +Arrays.toString(cl_student_id));
+    */
+     /* 
+    //TESTING UNIT  
+    double[] test_arr1={9,8,7,3,4,2};
+    double[] test_arr2={1,2,3,2,5,53,4};
+    double[] test_arr3={-33,-5,3,22,44,5};
+
+    Sort_With_Id(test_arr1,true); 
+    Sort_With_Id(test_arr2,true); 
+    Sort_With_Id(test_arr3,true); 
     */
       
     // answers  step 1
@@ -659,6 +670,55 @@ public class App{
     **/
     public static double round(double k, int decimalPlace){
         return Math.round(k*Math.pow(10,decimalPlace) )/Math.pow(10,decimalPlace);
+    }
+      /** Sotring array, and putting array's id s in same order as sorted array
+     *  @param arr: array to be sorted
+     *  @param order: true : ascending / false : descending
+     *  @return 2d array {{sorted array}{sorted array's id s}}
+    **/
+    public static double[][] Sort_With_Id(double[] arr,boolean order){
+       
+        double[][] sorted_arr_w_id= new double[2][arr.length];
+        double[] id_arr=new double[arr.length];
+        for(int i=0; i<id_arr.length;i++){
+            id_arr[i]=i;
+        }
+        boolean change=false;
+        double temp;
+        //order:
+        //true : ascending
+        //false : descending
+        for(int i=0;i<arr.length-1; i++){
+            for(int j=0;j<arr.length-1;j++){
+                if((arr[j]<arr[j+1]) && order){ // ascending
+                    // 2 values are replaced by each otehr
+                    temp= arr[j+1];
+                    arr[j+1]=arr[j];
+                    arr[j]=temp;
+                    change=true;
+                }
+                else if(arr[j]>arr[j+1] && !order) { //descending
+                    temp= arr[j+1];
+                    arr[j+1]=arr[j];
+                    arr[j]=temp;
+                    change=true;
+                }
+                if(change){
+                    temp=id_arr[j+1];
+                    id_arr[j+1]=id_arr[j];
+                    id_arr[j]=temp;
+                    change=false;
+                }
+            }
+        }
+        for(int i=0;i<sorted_arr_w_id[0].length; i++){
+            sorted_arr_w_id[0][i]= arr[i];
+            sorted_arr_w_id[1][i]= id_arr[i];
+        }
+        System.out.println(Arrays.toString(arr));
+        System.out.println(Arrays.toString(id_arr));
+        System.out.println(Arrays.deepToString(sorted_arr_w_id));
+        return sorted_arr_w_id; 
     }
 }
 
