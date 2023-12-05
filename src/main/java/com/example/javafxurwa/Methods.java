@@ -1,75 +1,95 @@
+package com.example.javafxurwa;
+
 import java.io.File;
+import java.io.IOException;
 import java.util.*;
 
 
 //common_MMS: What does it do (purpose)?
 //Comparing_Courses: unfinished, purpose?
 //person correlation (from line 388): ask ary to comment the methods, remove duplicates
-//multiple ways to calculate the course mean? which should i use
+//multiple ways to calculate the course mean? which should I use
 //Missing_Grades_Table, Print_Missing_Grades_Sorted: duplicate with ary's?
-//FiveEasiestCourses, Print_Missing_Grades, Stuents_Per_Course: look into the sorting of arrays with keeping the indexes
+//FiveEasiestCourses, Print_Missing_Grades, Students_Per_Course: look into the sorting of arrays with keeping the indexes
 
 public class Methods {
+
+    public static void main(String[] args) throws IOException{
+
+        double[][] grads = File_To_Array("src/main/resources/com/example/javafxurwa/GraduateGrades.csv");
+
+        System.out.println(Arrays.toString(grads[0]));
+        System.out.println(Arrays.toString(Cum_Laude_Graduates(grads)));
+
+    }
+
+
+
 	/** This method converts a csv-file into a two-dimensional containing the student grades
      * @param  fileName name of the csv-file
      * @return two-dimensional array of type double
     */
     public static double[][] File_To_Array(String fileName){
         try {
-            double[][] students_grades = new double[0][]; 
             File file=new File(fileName);
             Scanner fileScanner = new Scanner(file);
 
-            int numOfCourses = 30;
-            int studentID = -1; //small value to initialize
-            int arrayLength=-1; //small value to initialize
+            //added
+            double[][] studentArray = new double[0][];
+            int length = 0;
 
             int linesDone = 0;
-            while (fileScanner.hasNextLine() && linesDone <= 5) {
-            	String line = fileScanner.nextLine();
-            	linesDone++;
-                int courseIndex = 0;    //keeps track of the course
+            while (fileScanner.hasNextLine()) {
+                String line = fileScanner.nextLine();
+                if( !(line.length()>0))continue;
+                linesDone++;
 
-            	// and one that scans the line entry per entry using the commas as delimiters
-            	Scanner lineScanner = new Scanner(line);
+                //added code
+                if(linesDone==1){
+                    continue;
+                }
+                ArrayList<Double> gradeList = new ArrayList<Double>();
+                int studentID = -1;
+
+                // and one that scans the line entry per entry using the commas as delimiters
+                Scanner lineScanner = new Scanner(line);
                 lineScanner.useDelimiter(",");
-            	while (lineScanner.hasNext()) {
-            		if (lineScanner.hasNextInt()) {
-            			studentID = lineScanner.nextInt();
-
-                        //If the index (indicated by studentID) is larger than the length of the array:
-                        //  create a larger array with length studentID+1
-                        if(arrayLength<studentID){
-                            arrayLength = studentID;
-                            students_grades = Arrays.copyOf(students_grades, studentID+1);
-                        }
-                        //initialises only the studentID's we need to save resources
-                        students_grades[studentID] = new double[numOfCourses];
-
-            		} else if (lineScanner.hasNextDouble()) {
-            			double d = lineScanner.nextDouble();
-                        students_grades[studentID][courseIndex]=d;
-                        courseIndex++;
-            		} else {
-            			String s = lineScanner.next();
+                while (lineScanner.hasNext()) {
+                    if (lineScanner.hasNextInt() && studentID==-1) {
+                        studentID = lineScanner.nextInt();
+                    }else if(lineScanner.hasNextDouble()){
+                        double d = lineScanner.nextDouble();
+                        gradeList.add(d);
+                    }else if(lineScanner.hasNext() ){
+                        String s = lineScanner.next();
                         if(s.equals("NG")){
-                            students_grades[studentID][courseIndex]=-1;
+                            gradeList.add(-1.0);
                         }
-                        courseIndex++;
-            		}
-            	}
-            	lineScanner.close();
+                    }
+                }
+                //append gradeList to array
+                //double[] grades = gradeList.toArray(new double[0]);
+
+                double[] grades = gradeList.stream().mapToDouble(d -> d).toArray();
+
+                if(studentID>=length){
+                    length= studentID+1;
+                }
+                studentArray = Arrays.copyOf(studentArray, length);
+                studentArray[studentID] = grades;
+                lineScanner.close();
             }
             fileScanner.close();
             //prints the grades array per row with student index
 
-            return students_grades;
-            
+            return studentArray;
+
         } catch (Exception ex) {
             ex.printStackTrace();
             return null;
         }
     }
+ 
     
     /** This method converts a csv-file into a two-dimensional containing the student properties
      * @param  fileName name of the csv-file
@@ -107,7 +127,7 @@ public class Methods {
                         propertyList.add(s);
             		}
             	}
-                //append propertylist to array
+                //append propertyList to array
                 String[] property = propertyList.toArray(new String[0]);
 
                 if(studentID>=length){
@@ -135,18 +155,18 @@ public class Methods {
     */
     public static double[] MeanMedianStandardDeviation_Course(double[][] students_grades, int course){
         double[] mms = {-1.0, -1.0, -1.0};
-        int numOfstudents = 0;
+        int numOfStudents = 0;
         double[] courseGrades = new double[0];
 
         for (double[] student : students_grades) {
             if(student==null||student[course]==-1){continue;}
-            numOfstudents++;
-            courseGrades = Arrays.copyOf(courseGrades, numOfstudents);
+            numOfStudents++;
+            courseGrades = Arrays.copyOf(courseGrades, numOfStudents);
             courseGrades[courseGrades.length-1] = student[course];
         }
         Arrays.sort(courseGrades);
         //System.out.println(Arrays.toString(courseGrades));
-        if(numOfstudents==0)return mms;
+        if(numOfStudents==0)return mms;
 
         int len = courseGrades.length;
 
@@ -155,8 +175,8 @@ public class Methods {
         for (double grade: courseGrades) {
             sum += grade;
         }
-        double mean = sum/numOfstudents;
-        mms[0] = round(sum/numOfstudents, 2);
+        double mean = sum/numOfStudents;
+        mms[0] = round(sum/numOfStudents, 2);
 
         //median
         double median;
@@ -168,12 +188,11 @@ public class Methods {
         mms[1] = round(median, 2);
 
         // standard deviation
-        double deviation = 0;
+        double devSum = 0;
         for (double grade: courseGrades) {
-            deviation += (grade - mean) * (grade - mean);
+            devSum += Math.pow((grade - mean), 2);
         }
-        deviation = Math.sqrt( (deviation / mean) );
-
+        double deviation = Math.sqrt(devSum / (courseGrades.length - 1));
         mms[2] = round(deviation, 2);
 
         return mms;
@@ -281,7 +300,7 @@ public class Methods {
         commonStats[2] = round(commonDeviation, 2);
 
         return commonStats;
-    }
+    }  
 
     /** This method finds all cum-laude graduates
     * @param students_grades only for graduated students -->  no support for missing values
@@ -305,7 +324,6 @@ public class Methods {
             }
         }
         int[] honored_students_id = temp;
-        System.out.println(Arrays.toString(honored_students_id));
         return honored_students_id;
     }
 
@@ -348,7 +366,7 @@ public class Methods {
 
     /** Calculates the averages for all courses and puts them in an array
      * @param students_grades
-     * @return mean score for the courses a an double array
+     * @return mean score for the courses a double array
      */
     public static double[] Course_Average(double[][] students_grades) {
         double[] average = new double[students_grades[0].length]; //create an array for each average course grade
@@ -463,7 +481,7 @@ public class Methods {
                 }
             }
 
-            //checks if hasGrade isnt already in studentGradesPresent
+            //checks if hasGrade isn't already in studentGradesPresent
             boolean same = false;
             for(boolean[] group : studentGradesPresent){ 
                 if(Arrays.equals(group, hasGrade)){
@@ -518,7 +536,7 @@ public class Methods {
                 }
             }
         }
-        return Index_Sort(student_per_course);
+        return student_per_course;
     }
 
     /**
@@ -635,7 +653,7 @@ public class Methods {
         return Math.round(k*Math.pow(10,decimalPlace) )/Math.pow(10,decimalPlace);
     }
     
-    /** Sotring array, and putting array's id s in same order as sorted array
+    /** String array, and putting array's id s in same order as sorted array
      *  @param arr: array to be sorted
      *  @param order: true : ascending / false : descending
      *  @return 2d array {{sorted array}{sorted array's id s}}
@@ -655,7 +673,7 @@ public class Methods {
         for(int i=0;i<arr.length-1; i++){
             for(int j=0;j<arr.length-1;j++){
                 if((arr[j]<arr[j+1]) && order){ // ascending
-                    // 2 values are replaced by each otehr
+                    // 2 values are replaced by each other
                     temp= arr[j+1];
                     arr[j+1]=arr[j];
                     arr[j]=temp;
@@ -724,7 +742,7 @@ public class Methods {
         double lowestVar=-1;
 
         
-        //loop through all courses (not targetcourse or NG courses) and calculate their variance
+        //loop through all courses (not targetCourse or NG courses) and calculate their variance
         for(int course=0; course<gradeArray.length; course++){
             if(course==predict_course){continue;}
             //defining bounds for predicting
@@ -754,11 +772,11 @@ public class Methods {
     }
 
     /**
-     * Calculates the mean for a course using students that performe within boundaries for another course
-     * @param course_num course we want to calulate the mean of
+     * Calculates the mean for a course using students that perform within boundaries for another course
+     * @param course_num course we want to calculate the mean of
      * @param compare_course course to find students with certain performance
-     * @param lower lower boudary for performance on compare_course
-     * @param upper upper boudary for performace on compare_course
+     * @param lower lower boundary for performance on compare_course
+     * @param upper upper boundary for performance on compare_course
      * @param student_grades array containing students and grades
      * @return mean as a double
      */
@@ -766,7 +784,7 @@ public class Methods {
             //calculates mean the course
             double sum=0; int numOfStudents=0;
             for(int ID=0; ID<student_grades.length; ID++){ //loops over all the students
-                if( student_grades[ID] == null) {continue;} //checks if theres a student with this ID
+                if( student_grades[ID] == null) {continue;} //checks if there's a student with this ID
                 double grade_comp = student_grades[ID][compare_course];   //grade for course we compare to   
                 double grade = student_grades[ID][course_num]; //grade for course we want to predict
                 if( grade_comp != -1 && grade!=-1 && grade_comp >= lower && grade_comp < upper)  //checks if student has is between boundaries, then adds to total
@@ -782,7 +800,7 @@ public class Methods {
     }
     
     /**
-     * Calculates the variance in grades for a course using students that performe within boundaries for another course
+     * Calculates the variance in grades for a course using students that perform within boundaries for another course
      * @param course_num
      * @param compare_course
      * @param lower
@@ -796,7 +814,7 @@ public class Methods {
             //calculates mean the course
             double sum=0; int numOfStudents=0;
             for(int ID=0; ID<student_grades.length; ID++){ //loops over all the students
-                if( student_grades[ID] == null) {continue;} //checks if theres a student with this ID
+                if( student_grades[ID] == null) {continue;} //checks if there's a student with this ID
                 double grade_comp = student_grades[ID][compare_course];   //grade for course we compare to   
                 double grade = student_grades[ID][course_num]; //grade for course we want to predict
                 if( grade_comp != -1 && grade!=-1 && grade_comp >= lower && grade_comp < upper)  //checks if student has is between boundaries, then adds to total
@@ -830,14 +848,25 @@ public class Methods {
         double varLal = propertyVariance(course_num, Lal, student_grades, student_properties);
         double varVolta = propertyVariance(course_num, Volta, student_grades, student_properties);
         double totalVarRed = varHurni + varSuruna + varLal + varVolta;
-        double procentageSur= (1-varSuruna/totalVarRed) * courseMeanByProperty(course_num, Suruna, student_grades, student_properties);
-        double procentageHur= (1- varHurni/totalVarRed)  * courseMeanByProperty(course_num, Hurni, student_grades, student_properties);
-        double procentageLal= (1- varLal/totalVarRed)  * courseMeanByProperty(course_num, Lal, student_grades, student_properties);
-        double procentageVolta= (1 -varVolta/totalVarRed)  * courseMeanByProperty(course_num, Volta, student_grades, student_properties);
-        return (procentageLal + procentageVolta + procentageSur + procentageHur)/3;
+        double percentageSuruna= (1-varSuruna/totalVarRed) * courseMeanByProperty(course_num, Suruna, student_grades, student_properties);
+        double percentageHurni= (1- varHurni/totalVarRed)  * courseMeanByProperty(course_num, Hurni, student_grades, student_properties);
+        double percentageLal= (1- varLal/totalVarRed)  * courseMeanByProperty(course_num, Lal, student_grades, student_properties);
+        double percentageVolta= (1 -varVolta/totalVarRed)  * courseMeanByProperty(course_num, Volta, student_grades, student_properties);
+        return (percentageLal + percentageVolta + percentageSuruna + percentageHurni)/3;
 
     }
-    
+
+    public static double[] courseMinMax(int course_num, double[][] student_grades){
+        double[] a = {10,0};
+
+        for (double[] student : student_grades) {
+            if(student[course_num]==-1) continue;
+            if(a[0]>student[course_num]) a[0] = student[course_num];
+            if(a[1]<student[course_num]) a[1] = student[course_num];
+        }
+
+        return a;
+    }
     
     /**
      * Finds the best property to predict a grade by using variance reduction
@@ -893,7 +922,7 @@ public class Methods {
             
         if(propertyIndex==2){
             int LalCount = Integer.parseInt(property_value);
-            int A=0; //lower boudary
+            int A=0; //lower boundary
             int B=100; //upper boundary
             if(LalCount >= 90){
                 A=90; B=100;
@@ -907,7 +936,7 @@ public class Methods {
             //calculates the variance of the property value
             double sum=0; int numOfStudents=0;
             for(int ID=0; ID<student_properties.length; ID++){
-                if( student_properties[ID] == null) {continue;} //checks if theres a student with this ID
+                if( student_properties[ID] == null) {continue;} //checks if there's a student with this ID
                 int value = Integer.parseInt(student_properties[ID][propertyIndex]);
                 double grade = student_grades[ID][course_num];
                 if( value >= A && value < B && grade != -1) //checks if student has property value
@@ -921,7 +950,7 @@ public class Methods {
             //calculates the variance of the property value
             double sum=0; int numOfStudents=0;
             for(int ID=0; ID<student_properties.length; ID++){
-                if( student_properties[ID] == null) {continue;} //checks if theres a student with this ID
+                if( student_properties[ID] == null) {continue;} //checks if there's a student with this ID
                 double grade = student_grades[ID][course_num];
                 if( student_properties[ID][propertyIndex].equals(property_value) && grade != -1) //checks if student has property value
                 {   sum += Math.pow((grade-mean), 2);
@@ -956,7 +985,7 @@ public class Methods {
             
         if(propertyIndex==2){
             int LalCount = Integer.parseInt(property_value);
-            int A=0; //lower boudary
+            int A=0; //lower boundary
             int B=0; //upper boundary
             if(LalCount >= 90){
                 A=90; B=100;
@@ -970,7 +999,7 @@ public class Methods {
             //calculates mean the course
             double sum=0; int numOfStudents=0;
             for(int ID=0; ID<student_properties.length; ID++){
-                if( student_properties[ID] == null) {continue;} //checks if theres a student with this ID
+                if( student_properties[ID] == null) {continue;} //checks if there's a student with this ID
                 double grade = student_grades[ID][course_num];                
                 if( LalCount >= A && LalCount < B && grade != -1)  //checks if student has is between Lal boundaries
                 {   numOfStudents++; 
@@ -982,7 +1011,7 @@ public class Methods {
             //calculates mean the course
             double sum=0; int numOfStudents=0;
             for(int ID=0; ID<student_properties.length; ID++){
-                if( student_properties[ID]== null) {continue;} //checks if theres a student with this ID
+                if( student_properties[ID]== null) {continue;} //checks if there's a student with this ID
                 double grade = student_grades[ID][course_num];
                 if( student_properties[ID][propertyIndex].equals(property_value) && grade != -1) //checks if student has property value
                 {   numOfStudents++;
