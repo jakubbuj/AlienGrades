@@ -2,6 +2,7 @@ package com.example.javafxurwa;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 
 import javafx.collections.*;
 import javafx.scene.canvas.*;
@@ -20,20 +21,18 @@ import javafx.util.Pair;
 
 public class HelloController {
     private static final Insets margin = new Insets(10, 10, 10, 10);
-    private static double[][] graduate_grades = Methods.File_To_Array("src/main/resources/com/example/javafxurwa/GraduateGrades.csv");
-    private static double[][] current_grades = Methods.File_To_Array("src/main/resources/com/example/javafxurwa/CurrentGrades.csv");
-
+    private static final double[][] graduate_grades = Methods.File_To_Array("src/main/resources/com/example/javafxurwa/GraduateGrades.csv");
+    private static final double[][] current_grades = Methods.File_To_Array("src/main/resources/com/example/javafxurwa/CurrentGrades.csv");
+    private static final String[][] student_properties = Methods.File_To_Array_String("src/main/resources/com/example/javafxurwa/StudentInfo.csv");
 
     private static final String[] courses_names = {"JTE-234", "ATE-003", "TGL-013", "PPL-239", "WDM-974", "GHL-823", "HLU-200", "MON-014", "FEA-907", "LPG-307", "TSO-010", "LDE-009", "JJP-001", "MTE-004", "LUU-003", "LOE-103", "PLO-132", "BKO-800", "SLE-332", "BKO-801", "DSE-003", "DSE-005", "ATE-014", "JTW-004", "ATE-008", "DSE-007", "ATE-214", "JHF-101", "KMO-007", "WOT-104"};
-
-
     private static AnchorPane initializeScene() {
         AnchorPane root = new AnchorPane();
         Insets bgInsets = new Insets(0);
         BackgroundFill bgFill = new BackgroundFill(Color.WHITE, null, bgInsets);
-        root.setBackground(new Background(bgFill));
+            root.setBackground(new Background(bgFill));
         InnerShadow innerShadow = new InnerShadow(127, Color.LIGHTGRAY);
-        root.setEffect(innerShadow);
+            root.setEffect(innerShadow);
         return root;
     }
 
@@ -67,23 +66,25 @@ public class HelloController {
             yAxis.setStartX(520);
             yAxis.setStartY(285);
             yAxis.setEndX(520);
-            yAxis.setEndY(500);
+            yAxis.setEndY(530);
             yAxis.setStrokeWidth(1.5);
-            Line yArrow1 = new Line(520, 500, 515, 495);
-            Line yArrow2 = new Line(520, 500, 525, 495);
+            Line yArrow1 = new Line(520, 530, 515, 525);
+            Line yArrow2 = new Line(520, 530, 525, 525);
 
         Line value1 = new Line(517, 310, 523, 310);
         Line value2 = new Line(517, 340, 523, 340);
         Line value3 = new Line(517, 370, 523, 370);
         Line value4 = new Line(517, 400, 523, 400);
         Line value5 = new Line(517, 430, 523, 430);
+        Line value6 = new Line(517, 460, 523, 460);
+        Line value7 = new Line(517, 490, 523, 490);
 
         Group chart = new Group(yArrow1, yArrow2, yAxis, xArrow1, xArrow2, xAxis);
-        chart.getChildren().addAll(value1, value2, value3, value4, value5);
+        chart.getChildren().addAll(value1, value2, value3, value4, value5, value6, value7);
 
         //Creating and adjusting a Vbox where the choice buttons will be placed
         VBox vBox = new VBox();
-            vBox.setPrefHeight(215);
+            vBox.setPrefHeight(245);
             vBox.setPrefWidth(240);
             vBox.setPadding(margin);
             vBox.setSpacing(5);
@@ -128,7 +129,7 @@ public class HelloController {
         courseDifficultyMenuButton.getItems().addAll(courseDifficultyHistogram, courseDifficultyLinear);                //Adding MenuItems to MenuButton
 
         MenuButton courseOrderMenuButton = new MenuButton("Course Order");
-            MenuItem courseOrderHistogram = new MenuItem("Course Order Histogram");
+            MenuItem courseOrderHistogram = new MenuItem("Histogram");
                 courseOrderHistogram.setOnAction(event -> {
                     try {
                         switchToCourseOrderHistogram(stage);
@@ -136,39 +137,61 @@ public class HelloController {
                         throw new RuntimeException(e);
                     }
                 });                                                       //Assigning Action to switch scenes after clicking
-            MenuItem courseOrderLinear = new MenuItem("Grades Distribution Box Plot");
-                courseOrderLinear.setOnAction(event -> {
-                    try {
-                        switchToGradesDistributionBoxPlot(stage);
-                    } catch (IOException e) {
-                        throw new RuntimeException(e);
-                    }
-                });                                                          //Assigning Action to switch scenes after clicking
-        courseOrderMenuButton.getItems().addAll(courseOrderHistogram, courseOrderLinear);                               //Adding MenuItems to MenuButton
+        courseOrderMenuButton.getItems().addAll(courseOrderHistogram);                               //Adding MenuItems to MenuButton
 
         MenuButton courseSimilarityMenuButton = new MenuButton("Course Similarity");
-            MenuItem courseSimilarityHistogram = new MenuItem("Scatter Plot");
-                courseSimilarityHistogram.setOnAction(event -> {
+            MenuItem courseSimilarityScatterPlot = new MenuItem("Scatter Plot");
+                courseSimilarityScatterPlot.setOnAction(event -> {
                     try {
                         switchToCourseSimilarityScatterPlot(stage);
                     } catch (IOException e) {
                         throw new RuntimeException(e);
                     }
                 });                                                  //Assigning Action to switch scenes after clicking
-            MenuItem courseSimilarityLinear = new MenuItem("Bar Chart");
+            /*MenuItem courseSimilarityLinear = new MenuItem("Bar Chart");
                 courseSimilarityLinear.setOnAction(event -> {
                     try {
-                        switchToCourseSimilarityBar(stage);
+                        switchToCourseSimilarityLinear(stage);
                     } catch (IOException e) {
                         throw new RuntimeException(e);
                     }
-                });                                                     //Assigning Action to switch scenes after clicking
-        courseSimilarityMenuButton.getItems().addAll(courseSimilarityHistogram, courseSimilarityLinear);                //Adding MenuItems to MenuButton
+                });*/                                                     //Assigning Action to switch scenes after clicking
+        courseSimilarityMenuButton.getItems().addAll(courseSimilarityScatterPlot/*, courseSimilarityLinear*/);                //Adding MenuItems to MenuButton
+
+        MenuButton gradesDistributionMenuButton = new MenuButton("Grades Distribution");
+            MenuItem gradesDistributionBoxPlot = new MenuItem("Box Plot");
+                gradesDistributionBoxPlot.setOnAction(event -> {
+            try {
+                switchToGradesDistributionBoxPlot(stage);
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        });
+        gradesDistributionMenuButton.getItems().addAll(gradesDistributionBoxPlot);
+
+        MenuButton courseAverageMenuButton = new MenuButton("Course Average");
+                MenuItem courseAverageHistogram = new MenuItem("Histogram");
+                    courseAverageHistogram.setOnAction(event -> {
+                        try {
+                            switchToCourseAverageHistogram(stage);
+                        } catch (IOException e) {
+                            throw new RuntimeException(e);
+                        }
+                    });                                                  //Assigning Action to switch scenes after clicking
+                /*MenuItem courseAverageLinear = new MenuItem("Bar Chart");
+                    courseAverageLinear.setOnAction(event -> {
+                        try {
+                            switchToCourseAverageLinear(stage);
+                        } catch (IOException e) {
+                            throw new RuntimeException(e);
+                        }
+                    });*/                                                     //Assigning Action to switch scenes after clicking
+            courseAverageMenuButton.getItems().addAll(courseAverageHistogram/*, courseAverageLinear*/);                //Adding MenuItems to MenuButton
 
         Button exitButton = new Button("Quit");
             exitButton.setOnAction(actionEvent -> System.exit(0));
 
-        vBox.getChildren().addAll(cumLaudeMenuButton, courseDifficultyMenuButton, courseOrderMenuButton, courseSimilarityMenuButton, exitButton);
+        vBox.getChildren().addAll(cumLaudeMenuButton, courseDifficultyMenuButton, courseOrderMenuButton, courseSimilarityMenuButton, gradesDistributionMenuButton, courseAverageMenuButton, exitButton);
 
 
         AnchorPane.setTopAnchor(vBox, 285.0);
@@ -246,6 +269,41 @@ public class HelloController {
         bPane.setMinSize(1280,800);
         bPane.setPadding(margin);
 
+        CategoryAxis xAxis = new CategoryAxis();
+        NumberAxis yAxis = new NumberAxis(5, 10, 1);
+        BarChart<String,Number> barChart = new BarChart<String,Number>(xAxis,yAxis);
+        int number_of_courses = courses_names.length;
+        double[] course_means = new double[number_of_courses];
+        String[] course_names_sorted = new String[number_of_courses];
+        barChart.setTitle("Course Means implying it's difficulty");
+        xAxis.setLabel("Courses");
+        yAxis.setLabel("Means");
+
+        //Filling the array course_means with means
+        for (int course = 0; course < number_of_courses; course++) {
+            double[] mms = Methods.MeanMedianStandardDeviation_Course(graduate_grades, course);
+            double mean = mms[0];
+            course_means[course] = mean;
+        }
+
+        double[][] IDS = Methods.Sort_With_Id(course_means, false);
+        double[] mean = new double[number_of_courses];
+        XYChart.Series<String, Number> series = new XYChart.Series<>();
+
+        //Sorting the courses and creating the bar graph
+        for(int course = 0; course < number_of_courses; course++) {
+            course_names_sorted[course] = courses_names[(int)(IDS[1][course])];
+            mean[course] = course_means[course];
+
+            series.getData().add(new XYChart.Data<>(course_names_sorted[course], mean[course]));
+            series.setName(course_names_sorted[course]);
+        }
+
+        barChart.setMaxSize(1152,720);
+        barChart.getData().add(series);
+        barChart.setLegendVisible(false);
+        barChart.setBarGap(0);
+
         Button backButton = new Button("Go back");
         backButton.setOnAction(event -> {
             try {
@@ -255,6 +313,7 @@ public class HelloController {
             }
         });
 
+        bPane.setCenter(barChart);
         bPane.setBottom(backButton);
         root.getChildren().add(bPane);
 
@@ -273,6 +332,39 @@ public class HelloController {
         bPane.setMinSize(1280,800);
         bPane.setPadding(margin);
 
+        CategoryAxis xAxis = new CategoryAxis();
+        NumberAxis yAxis = new NumberAxis(5, 10, 1);
+        LineChart<String,Number> lineChart = new LineChart<String,Number>(xAxis,yAxis);
+        int number_of_courses = courses_names.length;
+        double[] course_means = new double[number_of_courses];
+        String[] course_names_sorted = new String[number_of_courses];
+        lineChart.setTitle("Course Means implying it's difficulty");
+        xAxis.setLabel("Courses");
+        yAxis.setLabel("Means");
+
+        //Filling the array course_means with means
+        for (int course = 0; course < number_of_courses; course++) {
+            double[] mms = Methods.MeanMedianStandardDeviation_Course(graduate_grades, course);
+            double mean = mms[0];
+            course_means[course] = mean;
+        }
+
+        double[][] IDS = Methods.Sort_With_Id(course_means, false);
+        XYChart.Series<String, Number> series = new XYChart.Series<>();
+
+        //Sorting the courses and creating the bar graph
+        for(int course = 0; course < number_of_courses; course++) {
+            course_names_sorted[course] = courses_names[(int)(IDS[1][course])];
+            double mean = course_means[course];
+
+            series.getData().add(new XYChart.Data<>(course_names_sorted[course], mean));
+            series.setName(course_names_sorted[course]);
+        }
+
+        lineChart.setMaxSize(1152, 720);
+        lineChart.getData().add(series);
+        lineChart.setLegendVisible(false);
+
         Button backButton = new Button("Go back");
         backButton.setOnAction(event -> {
             try {
@@ -282,6 +374,7 @@ public class HelloController {
             }
         });
 
+        bPane.setCenter(lineChart);
         bPane.setBottom(backButton);
         root.getChildren().add(bPane);
 
@@ -309,7 +402,41 @@ public class HelloController {
                 }
             });
 
-        bPane.setCenter(displayCourseOrderHistogram());
+        XYChart.Series<String, Number> studentsY1 = new XYChart.Series<>();
+        studentsY1.setName("Year 1");
+        XYChart.Series<String, Number> studentsY2 = new XYChart.Series<>();
+        studentsY2.setName("Year 2");
+        XYChart.Series<String, Number> studentsY3 = new XYChart.Series<>();
+        studentsY3.setName("Year 3");
+
+        int[] studentsPerCourse = Methods.Students_Per_Course(current_grades);
+        int[] orderedCoursesID = Methods.Index_Sort(studentsPerCourse);
+
+        //find max num of students and make yaxis
+        for (int i = orderedCoursesID.length - 1; i >= 0; i--) {
+            int index = orderedCoursesID[i];
+            if (studentsPerCourse[index] < 400 )
+                studentsY3.getData().add(new XYChart.Data<>(courses_names[index], studentsPerCourse[index]));
+            else if(studentsPerCourse[index] > 400 && studentsPerCourse[index] < 700)
+                studentsY2.getData().add(new XYChart.Data<>(courses_names[index], studentsPerCourse[index]));
+            else
+                studentsY1.getData().add(new XYChart.Data<>(courses_names[index], studentsPerCourse[index]));
+        }
+
+        CategoryAxis xAxis = new CategoryAxis();
+        int max = studentsPerCourse[orderedCoursesID[orderedCoursesID.length - 1]];
+        int stepSize = (max / 1000) * 100;
+        NumberAxis yAxis = new NumberAxis(0, max, stepSize);//sets the y-axis and its range
+        BarChart<String, Number> bc = new BarChart<String, Number>(xAxis, yAxis);
+        bc.setTitle("Order of courses");
+        xAxis.setLabel("Course");
+        yAxis.setLabel("Number of students");
+        bc.setMaxSize(1152, 720);
+        bc.setBarGap(-16);
+        bc.setCategoryGap(5);
+        bc.getData().addAll(studentsY1, studentsY2, studentsY3);
+
+        bPane.setCenter(bc);
         bPane.setBottom(backButton);
         root.getChildren().add(bPane);
 
@@ -322,38 +449,7 @@ public class HelloController {
 
     }
 
-    private static BarChart<String, Number> displayCourseOrderHistogram() {
-        XYChart.Series studentsY1 = new XYChart.Series();
-        XYChart.Series studentsY2 = new XYChart.Series();
-        XYChart.Series studentsY3 = new XYChart.Series();
-        studentsY1.setName("Year 1");
-        studentsY2.setName("Year 2");
-        studentsY3.setName("Year 3");
-        int[] studentPerCourse = Methods.Students_Per_Course(current_grades);
-        int[] orderedCoursesID = Methods.Index_Sort(studentPerCourse);
-        //find max num of students and make yaxis
-        for (int i = 0; i < orderedCoursesID.length; i++) {
-            int index = orderedCoursesID[i];
-            if (studentPerCourse[index] <500)
-            studentsY1.getData().add(new XYChart.Data(courses_names[index], studentPerCourse[index]));
-            if (studentPerCourse[index] > 500 && studentPerCourse[index] <700)
-            studentsY2.getData().add(new XYChart.Data(courses_names[index], studentPerCourse[index]));
-            if (studentPerCourse[index] > 700 )
-            studentsY3.getData().add(new XYChart.Data(courses_names[index], studentPerCourse[index]));
-        }
-        CategoryAxis xAxis = new CategoryAxis();
-        int max = studentPerCourse[orderedCoursesID[orderedCoursesID.length - 1]];
-        int stepSize = (max / 1000) * 10;
-        NumberAxis yAxis = new NumberAxis(0.0, max, stepSize);//sets the y-axis and its range
-        BarChart<String, Number> bc = new BarChart<String, Number>(xAxis, yAxis);
-        bc.setTitle("Order of courses");
-        xAxis.setLabel("Course");
-        yAxis.setLabel("Number of students");
-        bc.getData().addAll(studentsY1, studentsY2, studentsY3);
-        return bc;
-    }
-
-    private static void switchToGradesDistributionBoxPlot(Stage stage) throws IOException { //TODO
+    private static void switchToGradesDistributionBoxPlot(Stage stage) throws IOException {
         System.out.println("switchToGradesDistributionBoxPlot");
 
         AnchorPane root = initializeScene();
@@ -592,18 +688,10 @@ public class HelloController {
             Button confirm = new Button("Confirm");
                 confirm.setOnAction(e-> setFilters());
 
-//            Button toMain = new Button("Return");
-//            toMain.setOnAction(e-> {
-//                try {
-//                    switchToMainScene(window);
-//                } catch (IOException ex) {
-//                    throw new RuntimeException(ex);
-//                }
-//            });
-
             Label disclaimer = new Label("Control-click: Select multiple courses" +
                     "\nShift-click:Select a range");
                 disclaimer.setFont(Font.font("Verdana", 12));
+                disclaimer.setWrapText(true);
 
             rightPane.setSpacing(10);
             rightPane.setPadding(margin);
@@ -634,10 +722,10 @@ public class HelloController {
                         double[] d = Methods.MeanMedianStandardDeviation_Course(graduate_grades, (int)course.getValue());
 
                         for (double x : d) {
-                            System.out.print(x +" - ");
+//                            System.out.print(x +" - ");
                             if(x==-1) continue;
                         }
-                        System.out.println();
+//                        System.out.println();
                         double q3 = (d[0]+d[2]*0.6745>10)? (q3 = 10 ): d[0]+d[2]*0.6745;
                         double q1 = d[0]-d[2]*0.6745;
                         double[] minmax = Methods.courseMinMax((int)course.getValue(), graduate_grades);
@@ -692,11 +780,16 @@ public class HelloController {
             filterButtons.setAlignment(Pos.CENTER);
         VBox rightTop = new VBox(text1, filterButtons);
             rightTop.setAlignment(Pos.BOTTOM_CENTER);
+            rightTop.setPadding(margin);
         VBox rightBottom = new VBox(displayCourseSimilarityScatterPlot(graph, graduate_grades, courses_names, options[0], options[1]));
-            rightBottom.setAlignment(Pos.TOP_CENTER);
+            rightBottom.setAlignment(Pos.TOP_LEFT);
             rightBottom.setPadding(margin);
-        VBox bPaneRightSide = new VBox(rightTop, rightBottom);
+        VBox bPaneRightSide = new VBox();
             bPaneRightSide.setAlignment(Pos.CENTER);
+            bPaneRightSide.setMinWidth(300); // 25% of window size
+            bPaneRightSide.setMaxWidth(300); // 25% of window size
+            bPaneRightSide.setPadding(margin);
+            bPaneRightSide.getChildren().addAll(rightTop, rightBottom);
 
         ComboBox<String> dropdown_1 = new ComboBox<>();
         for (String course : courses_names) {dropdown_1.getItems().add(course);}
@@ -755,7 +848,7 @@ public class HelloController {
 
         int[] Frequency_of_grades = new int[10];
         int[] Frequency_of_grades_compare = new int[10];
-        double[] Frequency_distances = new double[10];
+        int[] Frequency_distances = new int[10];
         for (int j = 0; j < 2; j++) {
             int course_num;
             if (j == 0) {
@@ -792,10 +885,10 @@ public class HelloController {
 
 
         scatterChart.getData().addAll(dataSeries1, dataSeries2);
-        scatterChart.setPrefSize(896, 560); // 70% of window size
+        scatterChart.setPrefSize(960, 600); // 75% of window size
 
         // creating explanation text showing distances
-        double Frequency_distances_mean = 0;
+        int Frequency_distances_mean = 0;
         for (int i = 5; i < 10; i++) {
             Frequency_distances_mean += Frequency_distances[i];
         }
@@ -803,23 +896,23 @@ public class HelloController {
 
         //TODO Adjust the range values
         Text text = new Text(
-                "Frequency difference for each passing grade:" +
-                        "\nDifference in frequency of grade 6.0 = " + Frequency_distances[5] +
-                        "\nDifference in frequency of grade 7.0 = " + Frequency_distances[6] +
-                        "\nDifference in frequency of grade 8.0 = " + Frequency_distances[7] +
-                        "\nDifference in frequency of grade 9.0 = " + Frequency_distances[8] +
-                        "\nDifference in frequency of grade 10.0 = " + Frequency_distances[9] +
+                "Difference in frequency:" +
+                        "\nGrade 6.0 = " + Frequency_distances[5] +
+                        "\nGrade 7.0 = " + Frequency_distances[6] +
+                        "\nGrade 8.0 = " + Frequency_distances[7] +
+                        "\nGrade 9.0 = " + Frequency_distances[8] +
+                        "\nGrade 10.0 = " + Frequency_distances[9] +
                         "\n\nAverage difference = " + Frequency_distances_mean +
                         "\n\n\nSimilarity scale (by mean): \nStrong co-relation (<100)\n" +
                         "Medium co-relation (100-300)\nLow co-relation (300-500)\nContradicting (500<)"
 
         );
-        text.setFont(Font.font("Verdana"));
+            text.setFont(Font.font("Verdana"));
         graph.getChildren().addAll(scatterChart);
         return text;
     }
 
-    private static void switchToCourseSimilarityBar(Stage stage) throws IOException {
+    private static void switchToCourseSimilarityLinear(Stage stage) throws IOException {
         System.out.println("switchToCourseSimilarityBar");
 
         AnchorPane root = initializeScene();
@@ -845,5 +938,175 @@ public class HelloController {
         stage.setTitle("Course Similarity Bar Chart");
         stage.show();
     }
+    private static void switchToCourseAverageHistogram(Stage stage) throws IOException {
+        System.out.println("switchToCourseAverageHistogram");
 
+        AnchorPane root = initializeScene();
+        BorderPane bPane = new BorderPane();
+            bPane.setMaxSize(1280,800);
+            bPane.setMinSize(1280,800);
+            bPane.setPadding(margin);
+
+
+        //BarGraph
+        CategoryAxis xAxis = new CategoryAxis();
+            xAxis.setLabel("Courses");
+        NumberAxis yAxis = new NumberAxis(0.0,10, 0.5);
+            yAxis.setLabel("Mean score");
+        BarChart<String,Number> barChart = new BarChart<String,Number>(xAxis,yAxis);
+            barChart.setTitle("Course means by property");
+            barChart.setMaxSize(1152, 720);
+            barChart.setAnimated(false);
+            barChart.setBarGap(0);
+            barChart.setCategoryGap(5);
+
+        //right bar with settings
+        VBox rightPane = new VBox();
+            rightPane.setPrefWidth(200);
+            rightPane.setAlignment(Pos.BOTTOM_CENTER);
+            rightPane.setSpacing(5);
+            rightPane.setPadding(margin);
+
+        //Suruna
+        Label surunaLabel = new Label("Suruna");
+            surunaLabel.setFont(Font.font("Verdana", FontWeight.BOLD, 12));
+        CheckBox lobi = new CheckBox("lobi");
+        CheckBox nulp = new CheckBox("nulp");
+        CheckBox doot = new CheckBox("doot");
+        VBox surunaGroup = new VBox(lobi, nulp, doot);
+        rightPane.getChildren().addAll(surunaLabel, surunaGroup);
+
+        //Hurni
+        Label hurniLabel = new Label("Hurni level");
+            hurniLabel.setFont(Font.font("Verdana", FontWeight.BOLD, 12));
+        CheckBox nothing = new CheckBox("nothing");
+        CheckBox low = new CheckBox("low");
+        CheckBox medium = new CheckBox("medium");
+        CheckBox high = new CheckBox("high");
+        CheckBox full = new CheckBox("full");
+        VBox hurniGroup = new VBox(nothing, low, medium, high, full);
+        rightPane.getChildren().addAll(hurniLabel, hurniGroup);
+
+        //Volta
+        Label voltaLabel = new Label("Volta");
+            voltaLabel.setFont(Font.font("Verdana", FontWeight.BOLD, 12));
+        CheckBox one = new CheckBox("1 star");
+        CheckBox two = new CheckBox("2 stars");
+        CheckBox three = new CheckBox("3 stars");
+        CheckBox four = new CheckBox("4 stars");
+        CheckBox five = new CheckBox("5 stars");
+        VBox voltaGroup = new VBox(one, two, three, four, five);
+        rightPane.getChildren().addAll(voltaLabel, voltaGroup);
+
+        //Lal count
+        Group lalCount = new Group();
+        Label lalCountLabel = new Label("Lal count (60-100)");
+            lalCountLabel.setFont(Font.font("Verdana", FontWeight.BOLD, 12));
+        TextField lalRangeA = new TextField(); lalRangeA.setPromptText("min-max");
+        TextField lalRangeB = new TextField(); lalRangeB.setPromptText("min-max");
+        TextField lalRangeC = new TextField(); lalRangeC.setPromptText("min-max");
+        lalCount.getChildren().addAll(lalRangeA, lalRangeB, lalRangeC);
+        rightPane.getChildren().addAll(lalCountLabel, lalRangeA, lalRangeB, lalRangeC);
+
+        //courses
+        Label coursesLabel = new Label("Course selection");
+            coursesLabel.setFont(Font.font("Verdana", FontWeight.BOLD, 12));
+        ListView<String> courseSelection = new ListView<>();
+        courseSelection.getItems().addAll(courses_names);
+        courseSelection.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
+        rightPane.getChildren().addAll(coursesLabel, courseSelection);
+
+        //all checkboxes
+        CheckBox[] filterBoxes = {
+                lobi, nulp, doot,                       //suruna
+                nothing, low, medium, high, full,       //hurni
+                one, two, three, four, five             //volta
+        };
+        TextField[] txtField ={ lalRangeA, lalRangeB, lalRangeC};
+
+        //confirm filters
+        Button applyFiltersButton = new Button("Apply Filters");
+        HBox applyFilters = new HBox(applyFiltersButton);
+            applyFilters.setAlignment(Pos.BOTTOM_RIGHT);
+            HBox.setHgrow(applyFilters, Priority.ALWAYS);
+        applyFiltersButton.setOnAction(e->{
+            barChart.getData().clear();
+            ObservableList<String> selectedCourses =  courseSelection.getSelectionModel().getSelectedItems();
+            //loop over properties except lal count
+            for (int i=0; i<filterBoxes.length; i++ ) {
+                if(!filterBoxes[i].isSelected()) continue;
+                XYChart.Series<String, Number> series = new XYChart.Series<>();
+                String property = filterBoxes[i].getText();
+                series.nameProperty().set( property );
+                //loop over courses
+                for (String courseName : selectedCourses) {
+                    int courseId = Arrays.asList(courses_names).indexOf(courseName);
+                    double mean = Methods.courseMeanByProperty(courseId, property, current_grades, student_properties);
+                    series.getData().add(new XYChart.Data<>(courseName, mean));
+                }
+                barChart.getData().add(series);
+            }
+
+            //LalCount
+            for(TextField field : txtField){
+                String txt = field.getText();
+                if(txt.matches("\\d{2}-\\d{2}")){
+                    String[] s = txt.split("-");
+                    int min = Integer.parseInt(s[0]);
+                    int max = Integer.parseInt(s[1]);
+                    XYChart.Series<String, Number> series = new XYChart.Series<>();
+                    String property = "Lal("+txt+")";
+                    series.nameProperty().set( property );
+
+                    for (String courseName : selectedCourses) {
+                        int courseId = Arrays.asList(courses_names).indexOf(courseName);
+                        series.getData().add(new XYChart.Data<>(courseName, CourseMeanByLalCount(courseId, min, max)));
+                    }
+                    barChart.getData().add(series);
+                }
+            }
+        });
+
+
+        Button backButton = new Button("Go back");
+        backButton.setOnAction(event -> {
+            try {
+                switchToMainScene(stage);
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        });
+        HBox back = new HBox(backButton);
+            back.setAlignment(Pos.BOTTOM_LEFT);
+            HBox.setHgrow(back, Priority.ALWAYS);
+
+        HBox bottomGroup = new HBox(back, applyFilters);
+            bottomGroup.setAlignment(Pos.BOTTOM_CENTER);
+
+        bPane.setRight(rightPane);
+        bPane.setCenter(barChart);
+        bPane.setBottom(bottomGroup);
+        root.getChildren().add(bPane);
+
+        //Showing the stage
+        Scene scene = new Scene(root, 1280, 800);
+        stage.setScene(scene);
+        stage.setTitle("Course Average Bar Chart");
+        stage.show();
+    }
+    private static double CourseMeanByLalCount(int courseID, int min, int max){
+        double sum = 0;
+        int numOfStudents = 0;
+        for(int ID=0; ID<student_properties.length; ID++){
+            if( student_properties[ID] == null) {continue;}
+
+            double grade = current_grades[ID][courseID];
+            int lal = Integer.parseInt( student_properties[ID][2] );
+            if( lal >= min && lal < max && grade != -1) {
+                numOfStudents++;
+                sum += grade;
+            }
+        }
+        return (numOfStudents>0)? sum/numOfStudents : 0;
+    }
 }

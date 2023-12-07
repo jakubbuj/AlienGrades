@@ -31,7 +31,7 @@ public class Methods {
     */
     public static double[][] File_To_Array(String fileName){
         try {
-            File file=new File(fileName);
+            File file = new File(fileName);
             Scanner fileScanner = new Scanner(file);
 
             //added
@@ -108,7 +108,7 @@ public class Methods {
             while (fileScanner.hasNextLine()) {
             	String line = fileScanner.nextLine();
             	linesDone++;
-                
+
                 //added code
                 if(linesDone==1){
                     continue;
@@ -831,11 +831,7 @@ public class Methods {
     
     /**
      * Predicts a grade for a course for a given student based on their properties
-     * @param StudentID
-     * @param predict_course
-     * @param studentGrades
-     * @param studentProperties
-     * @return
+     * @return grade
      */
     public static double predictionByProperty(int studentID, int course_num, String[][] student_properties, double[][] student_grades){
         String Suruna = student_properties[studentID][0];
@@ -871,7 +867,6 @@ public class Methods {
     /**
      * Finds the best property to predict a grade by using variance reduction
      * @param studentID
-     * @param predict_course
      * @param student_grades
      * @return
      */
@@ -974,18 +969,18 @@ public class Methods {
     public static double courseMeanByProperty(int course_num, String property_value, double[][] student_grades, String[][] student_properties){
         double mean;
         String[][] properties = {
-            {"nulp", "doot", "lobi"}, //Suruna value
-            {"nothing", "low", "medium", "high", "full"}, //Hurni level
-            {}, //Lal count
-            {"1 star", "2 stars", "3 stars", "4 stars", "5 stars"} //Volta
+                {"nulp", "doot", "lobi"}, //Suruna value
+                {"nothing", "low", "medium", "high", "full"}, //Hurni level
+                {}, //Lal count
+                {"1 star", "2 stars", "3 stars", "4 stars", "5 stars"} //Volta
         };
         property_value.toLowerCase();
         int propertyIndex = Find_Row(properties, property_value);
 
-            
+
         if(propertyIndex==2){
             int LalCount = Integer.parseInt(property_value);
-            int A=0; //lower boundary
+            int A=0; //lower boudary
             int B=0; //upper boundary
             if(LalCount >= 90){
                 A=90; B=100;
@@ -999,10 +994,10 @@ public class Methods {
             //calculates mean the course
             double sum=0; int numOfStudents=0;
             for(int ID=0; ID<student_properties.length; ID++){
-                if( student_properties[ID] == null) {continue;} //checks if there's a student with this ID
-                double grade = student_grades[ID][course_num];                
+                if( student_properties[ID] == null) {continue;} //checks if theres a student with this ID
+                double grade = student_grades[ID][course_num];
                 if( LalCount >= A && LalCount < B && grade != -1)  //checks if student has is between Lal boundaries
-                {   numOfStudents++; 
+                {   numOfStudents++;
                     sum += grade;
                 }
             }
@@ -1011,7 +1006,7 @@ public class Methods {
             //calculates mean the course
             double sum=0; int numOfStudents=0;
             for(int ID=0; ID<student_properties.length; ID++){
-                if( student_properties[ID]== null) {continue;} //checks if there's a student with this ID
+                if( student_properties[ID]== null) {continue;} //checks if theres a student with this ID
                 double grade = student_grades[ID][course_num];
                 if( student_properties[ID][propertyIndex].equals(property_value) && grade != -1) //checks if student has property value
                 {   numOfStudents++;
