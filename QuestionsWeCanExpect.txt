@@ -1,0 +1,11 @@
+- How did we divide our workload?
+    - We have adapted to our colleague dropping-out and divided our team into two smaller ones based on our stronger sides. One team focused on writing code, and the other’s main focus was to handle our presentation side.
+- What were the biggest obstacles that we had to overcome?
+    - Time management, team schedule organisation and availability, distributing work over a group of people in a way that suits everybody.
+- How did we tackle those problems?
+    - We were in a continuous contact with each other via different types of internet communicators (Discord, WhatsApp). Those of us that were available were additionally meeting outside of Phase 2 schedule, to brainstorm ideas and solutions for our tasks. We’ve learned from Phase 1 our stronger and weaker sides, so we were more conscious about assigning roles to fully commit to this project. 
+- What have we learned  from phase 2?
+    - Every one of us strengthened not only our coding skills, but also time management, understanding UI design, data structures and their visualisation. 
+- How did we optimised our code? / What was the efficiency factor?
+---------//TODO-------------
+    - We tested and run the program many many times, adjusting 
