@@ -3,6 +3,7 @@ package com.example.javafxurwa;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 import javafx.collections.*;
 import javafx.scene.canvas.*;
@@ -24,7 +25,7 @@ public class HelloController {
     private static final double[][] graduate_grades = Methods.File_To_Array("src/main/resources/com/example/javafxurwa/GraduateGrades.csv");
     private static final double[][] current_grades = Methods.File_To_Array("src/main/resources/com/example/javafxurwa/CurrentGrades.csv");
     private static final String[][] student_properties = Methods.File_To_Array_String("src/main/resources/com/example/javafxurwa/StudentInfo.csv");
-
+    public static int[] cumLaudeArray = Methods.Cum_Laude_Graduates(graduate_grades);
     private static final String[] courses_names = {"JTE-234", "ATE-003", "TGL-013", "PPL-239", "WDM-974", "GHL-823", "HLU-200", "MON-014", "FEA-907", "LPG-307", "TSO-010", "LDE-009", "JJP-001", "MTE-004", "LUU-003", "LOE-103", "PLO-132", "BKO-800", "SLE-332", "BKO-801", "DSE-003", "DSE-005", "ATE-014", "JTW-004", "ATE-008", "DSE-007", "ATE-214", "JHF-101", "KMO-007", "WOT-104"};
     private static AnchorPane initializeScene() {
         AnchorPane root = new AnchorPane();
@@ -214,8 +215,67 @@ public class HelloController {
             bPane.setMinSize(1280,800);
             bPane.setPadding(margin);
 
+        String[] temp = {"Above", "Below"};
+        //Non cum laude
+        int NonCL = graduate_grades.length - cumLaudeArray.length;
+        //Percentage calculator
+        double PercentageCL = Math.round(((float) cumLaudeArray.length * 100 / (float)graduate_grades.length)/.01);
+        PercentageCL /= 100;
+        double PercentageGR = 100.0 - PercentageCL;
+
+        //Bar chart axis
+        CategoryAxis xAxisBarChart = new CategoryAxis();
+            xAxisBarChart.setLabel("Cum-Laude");
+        NumberAxis yAxisBarChart = new NumberAxis(0 , graduate_grades.length ,500);
+            yAxisBarChart.setLabel("Number of students");
+        NumberAxis yAxisBarChartP = new NumberAxis(0 , 100 ,10);
+            yAxisBarChartP.setLabel("Percentage of students");
+
+        //Creating the Bar chart
+        BarChart<String, Number> barChart = new BarChart<>(xAxisBarChart, yAxisBarChart);
+            barChart.setTitle("Students that graduated Cum-Laude");
+
+        //Adding data to BarChart
+        XYChart.Series<String, Number> series1 = new XYChart.Series<>();
+            series1.setName(temp[0]);
+            series1.getData().add(new XYChart.Data<>(temp[0], cumLaudeArray.length));
+        XYChart.Series<String, Number> series2 = new XYChart.Series<>();
+            series2.setName(temp[1]);
+            series2.getData().add(new XYChart.Data<>(temp[1], NonCL));
+
+        XYChart.Series<String, Number> series3 = new XYChart.Series<>();
+            series3.setName(temp[0]);
+            series3.getData().add(new XYChart.Data<>(temp[0], PercentageCL));
+        XYChart.Series<String, Number> series4 = new XYChart.Series<>();
+            series4.setName(temp[1]);
+            series4.getData().add(new XYChart.Data<>(temp[1], PercentageGR));
+
+        //Button
+        Button buttonNumbers = new Button("Numbers");
+            buttonNumbers.setOnAction(e-> {
+                bPane.setCenter(null);
+                BarChart<String, Number> barChartN = new BarChart<>(xAxisBarChart, yAxisBarChart);
+                barChartN.setTitle("Students that graduated Cum-Laude");
+                barChartN.getData().addAll(series1, series2);
+                barChartN.setBarGap(-192);
+                barChartN.setLegendVisible(false);
+                barChartN.setAnimated(false);
+                bPane.setCenter(barChartN);
+            });
+        Button buttonPercentage =new Button("Percentage");
+            buttonPercentage.setOnAction(e-> {
+                bPane.setCenter(null);
+                BarChart<String, Number> barChartP = new BarChart<>(xAxisBarChart, yAxisBarChartP);
+                barChartP.setTitle("Students that graduated Cum-Laude");
+                barChartP.getData().addAll(series3, series4);
+                barChartP.setBarGap(-192);
+                barChartP.setLegendVisible(false);
+                barChartP.setAnimated(false);
+                bPane.setCenter(barChartP);
+            });
+
         Button backButton = new Button("Go back");
-        backButton.setOnAction(event -> {
+            backButton.setOnAction(event -> {
             try {
                 switchToMainScene(stage);
             } catch (IOException e) {
@@ -223,7 +283,20 @@ public class HelloController {
             }
         });
 
-        bPane.setBottom(backButton);
+        HBox filtersBox = new HBox(buttonNumbers, buttonPercentage);
+            HBox.setHgrow(filtersBox, Priority.ALWAYS);
+            filtersBox.setAlignment(Pos.BOTTOM_RIGHT);
+            filtersBox.setSpacing(10);
+        HBox buttonsBox = new HBox(backButton, filtersBox);
+
+        //Setting the data to bar chart
+        barChart.getData().addAll(series1, series2);
+        barChart.setBarGap(-192);
+        barChart.setLegendVisible(false);
+        barChart.setAnimated(false);
+
+        bPane.setCenter(barChart);
+        bPane.setBottom(buttonsBox);
         root.getChildren().add(bPane);
 
         //Displaying the stage
@@ -231,7 +304,6 @@ public class HelloController {
         stage.setScene(scene);
         stage.setTitle("Cum-Laude Bar Chart");
         stage.show();
-
     }
 
     private static void switchToCumLaudePieChart(Stage stage) throws IOException {
@@ -242,6 +314,57 @@ public class HelloController {
         bPane.setMinSize(1280,800);
         bPane.setPadding(margin);
 
+        //Non cum laude
+        int NonCL = graduate_grades.length - cumLaudeArray.length;
+        //Percentage calculator
+        double PercentageCL = Math.round(((float) cumLaudeArray.length * 100 / (float)graduate_grades.length)/.01);
+        PercentageCL = PercentageCL/100;
+        double PercentageGR = 100.0 - PercentageCL;
+
+
+        //Preparing ObservableList object
+        ObservableList<PieChart.Data> pieChartDataPercentage = FXCollections.observableArrayList(
+                new PieChart.Data("Above Cum-Laude "+ PercentageCL +"%" , cumLaudeArray.length),
+                new PieChart.Data("Below Cum-Laude " +PercentageGR + "%", NonCL));
+        ObservableList<PieChart.Data> pieChartDataNumber = FXCollections.observableArrayList(
+                new PieChart.Data("Above Cum-Laude "+ cumLaudeArray.length , cumLaudeArray.length),
+                new PieChart.Data("Below Cum-Laude " +NonCL, NonCL));
+
+        //Creating a Pie chart
+        PieChart pieChart = new PieChart(pieChartDataPercentage);
+        PieChart pieChartNumbers = new PieChart((pieChartDataNumber));
+
+        //Setting the title of the Pie chart
+        pieChart.setTitle("Cum-Laude students");
+        pieChartNumbers.setTitle("Cum-Laude students");
+
+        //setting the direction to arrange the data
+        pieChart.setClockwise(true);
+        pieChartNumbers.setClockwise(true);
+
+        //Setting the length of the label line
+        pieChart.setLabelLineLength(30);
+        pieChartNumbers.setLabelLineLength(30);
+
+        //Setting the labels of the pie chart visible
+        pieChart.setLabelsVisible(true);
+        pieChartNumbers.setLabelsVisible(true);
+
+        //Setting the start angle of the pie chart
+        pieChart.setStartAngle(256);
+        pieChartNumbers.setStartAngle(256);
+
+        //Button
+        Button buttonNumbers = new Button("Percentage");
+        buttonNumbers.setOnAction(e-> {
+            bPane.setCenter(null);
+            bPane.setCenter(pieChart);});
+        Button buttonPercentage =new Button("Numbers");
+        buttonPercentage.setOnAction(e-> {
+            bPane.setCenter(null);
+            bPane.setCenter(pieChartNumbers);});
+
+
         Button backButton = new Button("Go back");
         backButton.setOnAction(event -> {
             try {
@@ -251,7 +374,14 @@ public class HelloController {
             }
         });
 
-        bPane.setBottom(backButton);
+        HBox filtersBox = new HBox(buttonNumbers, buttonPercentage);
+            HBox.setHgrow(filtersBox, Priority.ALWAYS);
+            filtersBox.setAlignment(Pos.BOTTOM_RIGHT);
+            filtersBox.setSpacing(10);
+        HBox buttonsBox = new HBox(backButton, filtersBox);
+
+        bPane.setCenter(pieChart);
+        bPane.setBottom(buttonsBox);
         root.getChildren().add(bPane);
 
         //Displaying the stage
@@ -266,8 +396,8 @@ public class HelloController {
 
         AnchorPane root = initializeScene();
         BorderPane bPane = new BorderPane();
-        bPane.setMinSize(1280,800);
-        bPane.setPadding(margin);
+            bPane.setMinSize(1280,800);
+            bPane.setPadding(margin);
 
         CategoryAxis xAxis = new CategoryAxis();
         NumberAxis yAxis = new NumberAxis(5, 10, 1);
@@ -275,6 +405,8 @@ public class HelloController {
         int number_of_courses = courses_names.length;
         double[] course_means = new double[number_of_courses];
         String[] course_names_sorted = new String[number_of_courses];
+
+
         barChart.setTitle("Course Means implying it's difficulty");
         xAxis.setLabel("Courses");
         yAxis.setLabel("Means");
@@ -403,11 +535,11 @@ public class HelloController {
             });
 
         XYChart.Series<String, Number> studentsY1 = new XYChart.Series<>();
-        studentsY1.setName("Year 1");
+            studentsY1.setName("Year 1");
         XYChart.Series<String, Number> studentsY2 = new XYChart.Series<>();
-        studentsY2.setName("Year 2");
+            studentsY2.setName("Year 2");
         XYChart.Series<String, Number> studentsY3 = new XYChart.Series<>();
-        studentsY3.setName("Year 3");
+            studentsY3.setName("Year 3");
 
         int[] studentsPerCourse = Methods.Students_Per_Course(current_grades);
         int[] orderedCoursesID = Methods.Index_Sort(studentsPerCourse);
@@ -611,7 +743,7 @@ public class HelloController {
         //draws text on the canvas according to the coordinateGrid
         public void drawText(String s, Coordinates c){
             gc.save();
-            gc.setFont(Font.font( "Verdana", 14));
+            gc.setFont(Font.font( "Verdana", 12));
             gc.fillText(s, c.getX()-s.length()*5/2, c.getY() );
             gc.restore();
         }
@@ -767,12 +899,12 @@ public class HelloController {
 
         Button testButton = new Button("Go back");
             testButton.setOnAction(event -> {
-            try {
-                switchToMainScene(stage);
-            } catch (IOException e) {
-                throw new RuntimeException(e);
-            }
-        });
+                try {
+                    switchToMainScene(stage);
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                }
+            });
 
         HBox filterButtons = new HBox();
             filterButtons.setSpacing(5);
@@ -1050,7 +1182,7 @@ public class HelloController {
             //LalCount
             for(TextField field : txtField){
                 String txt = field.getText();
-                if(txt.matches("\\d{2}-\\d{2}")){
+                if(txt.matches("\\d{2}-\\d{2}") || txt.matches("\\d{2}-\\d{3}")){
                     String[] s = txt.split("-");
                     int min = Integer.parseInt(s[0]);
                     int max = Integer.parseInt(s[1]);
