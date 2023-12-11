@@ -11,8 +11,6 @@ The goal of the project is to get experience with Scientific Research, Critical 
 7. Work with multi-dimensional arrays using nested loops.
 8. Gain exposure to machine learning and decision trees.
 
-We were given three .csv files containg various types of data. We had to read, analyze, understand, process and make use of it.
-
 # Phase 2
 1. Develop a user interface for simple data visualization.
 2. Understand the importance of effective data visualizations.
@@ -24,3 +22,11 @@ We were given three .csv files containg various types of data. We had to read, a
 2. Develop a regression tree algorithm.
 3. Implement Random Forests, a state-of-the-art machine learning method.
 4. Produce accurate predictions about unobserved data using Random Forests.
+
+# How to use the app 
+1. Create a JavaFX project in an IDE of your choice.
+2. Copy the source folder to your IDE's directory.
+3. Run the program by executing HelloApplication.java
+4. After a window loads, you can choose which information you want to display, and a type of chart in which you'd like to view the data in (if applicable).
+5. Certain data can, or has to be filtered in order to display a graph. 
+6. Go back to the selection menu by clicking the "Go back" button in the bottom left corner of the window.
