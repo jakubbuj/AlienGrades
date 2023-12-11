@@ -1,5 +1,7 @@
 package com.example.javafxurwa;
 
+import javafx.scene.text.Text;
+
 import java.io.File;
 import java.io.IOException;
 import java.util.*;
@@ -1076,5 +1078,63 @@ public class Methods {
         }
 
         return groupedCourses;
+    }
+    public static Text simillarityStamps(double[][] grades){
+        int[] Frequency_of_grades_c1 = new int[10];
+        int[] Frequency_of_grades_c2 = new int[10];
+
+        // getting number of possible combiantions of 2 courses(AB,AC,AD,BC,BD) without repetition (AB,BA) (AA,AA)
+        // formula n=num of courses (n-1)+(n-2)+(n-3)...-1
+        int numOfPossibileCombiantions=0;
+        for(int i=0;i<grades[0].length;i++){
+            for(int j=i+1;j<grades[0].length;j++){
+                numOfPossibileCombiantions+=1;
+            }
+        }
+
+        double[] Frequency_distances_means_all = new double[numOfPossibileCombiantions];
+        int course_num = 0;
+        double SumOfDistances= 0;
+        // calculating  mean of grades grequency for each comination of 2 courses
+        for(int i=0;i<grades[0].length;i++){
+            // calculating frequnxy of grades for course 1
+            for(int k=0; k<grades.length; k++){
+                Frequency_of_grades_c1[(int)grades[k][i]-1] = Frequency_of_grades_c1[(int)grades[k][i]-1]+1;
+            }
+            for(int j=i+1;j<grades[0].length;j++){
+
+                // calculating frequnxy of grades for course 2
+                for(int k=0; k<grades.length; k++){
+                    Frequency_of_grades_c2[(int)grades[k][j]-1] = Frequency_of_grades_c2[(int)grades[k][j]-1]+1;
+                }
+                //calculating distances between grade frequency points and mean of them (from grade 6)
+                for(int k=5; k<10; k++){
+                    SumOfDistances+=Math.abs(Frequency_of_grades_c1[k] - Frequency_of_grades_c2[k]);
+                    //reseting array course 2
+                    Frequency_of_grades_c2[k]=0;
+                }
+
+                Frequency_distances_means_all[course_num] =SumOfDistances/5;
+                SumOfDistances=0;
+                course_num++;
+
+            }
+            //reseting array course 1
+            for(int k=0; k<10; k++){
+                Frequency_of_grades_c1[k]=0;
+            }
+        }
+        //stamps 1%, 5%,40%,60%,95%,99%
+        Arrays.sort(Frequency_distances_means_all);
+        Text text = new Text(
+                "\n\nSimillarity scale (by mean):" +
+                        "\nStrong co-relation (1%) (<"+(int)Frequency_distances_means_all[(int)(numOfPossibileCombiantions*0.01)]+")"+
+                        "\nMedium co-relation (4%) ("+(int)Frequency_distances_means_all[(int)(numOfPossibileCombiantions*0.01)]+"-"+(int)Frequency_distances_means_all[(int)(numOfPossibileCombiantions*0.05)]+")"+
+                        "\nLow co-relation (25%) ("+(int)Frequency_distances_means_all[(int)(numOfPossibileCombiantions*0.05)]+"-"+(int)Frequency_distances_means_all[(int)(numOfPossibileCombiantions*0.30)]+")"+
+                        "\nNo relation (40%) ("+(int)Frequency_distances_means_all[(int)(numOfPossibileCombiantions*0.30)]+"-"+(int)Frequency_distances_means_all[(int)(numOfPossibileCombiantions*0.70)]+")"+
+                        "\nLow contradiction (25%) ("+(int)Frequency_distances_means_all[(int)(numOfPossibileCombiantions*0.70)]+"-"+(int)Frequency_distances_means_all[(int)(numOfPossibileCombiantions*0.95)]+")"+
+                        "\nMedium contradiction (4%) ("+(int)Frequency_distances_means_all[(int)(numOfPossibileCombiantions*0.95)]+"-"+(int)Frequency_distances_means_all[(int)(numOfPossibileCombiantions*0.99)]+")"+
+                        "\nStrong contradiction (1%) ("+(int)Frequency_distances_means_all[(int)(numOfPossibileCombiantions*0.99)]+"<)");
+    return text;
     }
 }
