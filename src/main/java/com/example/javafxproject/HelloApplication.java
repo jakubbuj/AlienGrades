@@ -1,4 +1,4 @@
-package com.example.javafxurwa;
+package com.example.javafxproject;
 
 import javafx.application.Application;
 import javafx.stage.Stage;

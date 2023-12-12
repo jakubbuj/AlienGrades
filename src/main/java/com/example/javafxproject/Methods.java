@@ -1,4 +1,4 @@
-package com.example.javafxurwa;
+package com.example.javafxproject;
 
 import javafx.scene.text.Text;
 
@@ -18,7 +18,7 @@ public class Methods {
 
     public static void main(String[] args) throws IOException{
 
-        double[][] grads = File_To_Array("src/main/resources/com/example/javafxurwa/GraduateGrades.csv");
+        double[][] grads = File_To_Array("src/main/resources/com/example/javafxproject/GraduateGrades.csv");
 
         System.out.println(Arrays.toString(grads[0]));
         System.out.println(Arrays.toString(Cum_Laude_Graduates(grads)));

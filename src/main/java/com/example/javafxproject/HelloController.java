@@ -1,10 +1,8 @@
-package com.example.javafxurwa;
+package com.example.javafxproject;
 
 import java.io.IOException;
-import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
 
 import javafx.collections.*;
 import javafx.scene.canvas.*;
@@ -23,9 +21,9 @@ import javafx.util.Pair;
 
 public class HelloController {
     private static final Insets margin = new Insets(10, 10, 10, 10);
-    private static final double[][] graduate_grades = Methods.File_To_Array("src/main/resources/com/example/javafxurwa/GraduateGrades.csv");
-    private static final double[][] current_grades = Methods.File_To_Array("src/main/resources/com/example/javafxurwa/CurrentGrades.csv");
-    private static final String[][] student_properties = Methods.File_To_Array_String("src/main/resources/com/example/javafxurwa/StudentInfo.csv");
+    private static final double[][] graduate_grades = Methods.File_To_Array("src/main/resources/com/example/javafxproject/GraduateGrades.csv");
+    private static final double[][] current_grades = Methods.File_To_Array("src/main/resources/com/example/javafxproject/CurrentGrades.csv");
+    private static final String[][] student_properties = Methods.File_To_Array_String("src/main/resources/com/example/javafxproject/StudentInfo.csv");
     public static int[] cumLaudeArray = Methods.Cum_Laude_Graduates(graduate_grades);
     private static final String[] courses_names = {"JTE-234", "ATE-003", "TGL-013", "PPL-239", "WDM-974", "GHL-823", "HLU-200", "MON-014", "FEA-907", "LPG-307", "TSO-010", "LDE-009", "JJP-001", "MTE-004", "LUU-003", "LOE-103", "PLO-132", "BKO-800", "SLE-332", "BKO-801", "DSE-003", "DSE-005", "ATE-014", "JTW-004", "ATE-008", "DSE-007", "ATE-214", "JHF-101", "KMO-007", "WOT-104"};
     private static AnchorPane initializeScene() {
@@ -1201,7 +1199,7 @@ public class HelloController {
             bPane.setPadding(margin);
 
 
-        //BarGraph
+        //LineChart
         CategoryAxis xAxis = new CategoryAxis();
             xAxis.setLabel("Courses");
         NumberAxis yAxis = new NumberAxis(0.0,10, 0.5);
@@ -1210,8 +1208,6 @@ public class HelloController {
             lineChart.setTitle("Course means by property");
             lineChart.setMaxSize(1152, 720);
             lineChart.setAnimated(false);
-//            barChart.setBarGap(0);
-//            barChart.setCategoryGap(5);
 
         //right bar with settings
         VBox rightPane = new VBox();

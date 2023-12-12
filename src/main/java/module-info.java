@@ -3,6 +3,6 @@ module com.example.javafxurwa {
     requires javafx.fxml;
 
 
-    opens com.example.javafxurwa to javafx.fxml;
-    exports com.example.javafxurwa;
+    opens com.example.javafxproject to javafx.fxml;
+    exports com.example.javafxproject;
 }
