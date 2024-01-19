@@ -1,5 +1,3 @@
-import java.awt.*;
-import java.awt.List;
 import java.util.*;
 
 public class BinaryDecisionTree {
@@ -30,7 +28,7 @@ public class BinaryDecisionTree {
             // Find the best split
             bestSplit = getBestSplit(specificCourseArray, numSamples, numFeatures);
             // Check if information gain is positive
-            if (bestSplit != null && Double.parseDouble(bestSplit[2][0][2]) > 0) {
+            if (bestSplit != null && bestSplit[2] != null && Double.parseDouble(bestSplit[2][0][2]) > 0) {
                 // Recur left
                 Node leftSubtree = buildTree(bestSplit[0], currDepth + 1);
                 // Recur right
@@ -128,7 +126,7 @@ public class BinaryDecisionTree {
     }
 
     public String [][][] getBestSplit(String[][] specificCourseArray, int numSamples, int numFeatures) {
-        String [][][] bestSplit = null;
+        String [][][] bestSplit = new String[3][][];
         double maxVarRed = Double.MIN_VALUE;
 
         // Loop over all features
@@ -157,7 +155,10 @@ public class BinaryDecisionTree {
                     double currVarRed = varianceReduction(y, leftY, rightY);
 
                     if (currVarRed > maxVarRed) {
-                        bestSplit = splitResult;
+                        bestSplit[0] = splitResult[0];
+                        bestSplit[1] = splitResult[1];
+                        String[][] A = {{ Integer.toString(featureToIndex(threshold)), threshold, String.valueOf(varianceReduction(y, leftY, rightY)) }};
+                        bestSplit[2] = A;
                         maxVarRed = currVarRed;
                     }
                 }
@@ -166,7 +167,22 @@ public class BinaryDecisionTree {
         return bestSplit;
     }
 
+    public int featureToIndex(String feature){
+        ArrayList<String> Suruna = new ArrayList<String>(Arrays.asList(new String[]{"nulp","doot","lobi"}));
+        ArrayList<String> Hurni = new ArrayList<String>(Arrays.asList(new String[]{"nothing","low","medium","full","high"}));
+        ArrayList<String> Lal =new ArrayList<String>( Arrays.asList(new String[]{"1 star","2 stars","3 stars","4 stars","5 stars"}));
+        
+        if(Suruna.contains(feature)) return 0;
+        if(Hurni.contains(feature)) return 1;
+        if(Lal.contains(feature)) return 3;
+        try {
+            Integer.parseInt(feature);
+            return 3;
+        } catch (NumberFormatException e) {
+            return Integer.MAX_VALUE;
+        }
 
+    }
 
     public double varianceReduction(double[] parentY, double[] leftY, double[] rightY) {
         double weightLeft = (double) leftY.length / parentY.length;
@@ -255,7 +271,7 @@ public class BinaryDecisionTree {
         String featureVal = x[tree.getAttributeIndex()];
 
         // Check if the feature value is a numeric value)
-        if (!Double.isNaN(Double.parseDouble(featureVal))) {
+        if (isDouble(featureVal)) {
             double numericFeatureVal = Double.parseDouble(featureVal);
             double numThreshold = Double.parseDouble(tree.getThreshold());
             if (numericFeatureVal <= numThreshold) {
@@ -291,7 +307,18 @@ public class BinaryDecisionTree {
         return predictions;
     }
 
+    public double predict(String[] properties){
+        return makePrediction(properties, root);
+    }
 
+    private boolean isDouble(String s){
+        try {
+            Double.parseDouble(s);
+            return true;
+        } catch (NumberFormatException e) {
+            return false;
+        }
+    }
 
 }
 
