@@ -1407,6 +1407,17 @@ public class HelloController {
 
         Button submitButton = new Button("Submit");
 
+         // visulaisation
+         Pane p = new Pane();
+         p.setPrefWidth(800);  
+         p.setPrefHeight(800); 
+ 
+ 
+         //Container Left-Right
+         HBox hbox = new HBox(10);
+         hbox.setPadding(new Insets(10));
+         hbox.getChildren().addAll(p, vbox);
+         root.getChildren().addAll(hbox);
 
         //event listeners for options
         submitButton.setOnAction(event -> {
@@ -1414,12 +1425,15 @@ public class HelloController {
             // HurniLevelOption[0] =  HurniLevelChoiceBox.getValue();
             // VoltaChoiceOption[0] = VoltaChoiceBox.getValue();
             // LalCountOption[0] = textFieldLalCount.getText();
-            drawTree(
-                SurunaValueChoiceBox.getValue(),
-                HurniLevelChoiceBox.getValue(),
-                VoltaChoiceBox.getValue(),
-                textFieldLalCount.getText()
-                );
+            
+            p.getChildren().addAll(drawTree(
+                    SurunaValueChoiceBox.getValue(),
+                    HurniLevelChoiceBox.getValue(),
+                    VoltaChoiceBox.getValue(),
+                    textFieldLalCount.getText()
+                ));
+                hbox.getChildren().addAll(p);
+                root.getChildren().addAll(hbox);
         });
         vbox.getChildren().addAll(
         SVlabel,
@@ -1433,17 +1447,7 @@ public class HelloController {
         submitButton
         );
 
-        // visulaisation
-        Pane p = new Pane();
-        p.setPrefWidth(800);  
-        p.setPrefHeight(800); 
-
-
-        //Container Left-Right
-        HBox hbox = new HBox(10);
-        hbox.setPadding(new Insets(10));
-        hbox.getChildren().addAll(p, vbox);
-        root.getChildren().addAll(hbox);
+       
     
         // Displaying the stage
         Scene scene = new Scene(root, 1280, 800);
@@ -1454,7 +1458,7 @@ public class HelloController {
 
   
 
-   private static void drawTree(String AtrSurunaValue,String AtrHurniLevel,String AtrVolta,String AtrLalCount ){
+   private static Pane drawTree(String AtrSurunaValue,String AtrHurniLevel,String AtrVolta,String AtrLalCount ){
 
     //SETTINGS
       //general
@@ -1483,7 +1487,7 @@ public class HelloController {
   //checking if student has properties
     if(arrayOfStudentInfo==null){
       System.out.println("Student without properties");
-      return;
+      return null; 
     }
     System.out.println("course: "+COURSE);
     System.out.println("properties: "+Arrays.toString(arrayOfStudentInfo[STUDENT_ID]));
@@ -1493,7 +1497,7 @@ public class HelloController {
     int[] training = DataPreparation.getTrainingIndexes(arrayOfCurrentGrades, COURSE);
     if(training.length==0){
       System.out.println("no training data available");
-      return;
+      return null;
     }
     double[][] trainDatasetCourses = new double[training.length][];
     String[][] trainDatasetAttributes = new String[training.length][];
@@ -1515,17 +1519,20 @@ public class HelloController {
     System.out.println("forest prediction: "+ forest.predict(arrayOfStudentInfo[STUDENT_ID]));
     System.out.println();
 
-    
-  //visualisising tree
-    if (PRINT_TREE) tree.printTree();
-    if (PRINT_FOREST) forest.printTree();
-    tree.printTreeVisualisation(400,20,40,20);
-    tree.getPaneTreeVisualisation();
+  
   //testing the trees
   TreeTests test = new TreeTests(arrayOfCurrentGrades, arrayOfStudentInfo);
   System.out.println("tree accuracy: "+test.getAccuracy(tree, COURSE)); //accuracy for this tree on this course
   ForestTests ftest = new ForestTests(arrayOfCurrentGrades, arrayOfStudentInfo);
   System.out.println("forest accuracy: "+ftest.getAccuracy(forest, COURSE));
+
+    
+  //visualisising tree
+  if (PRINT_TREE) tree.printTree();
+  if (PRINT_FOREST) forest.printTree();
+  tree.printTreeVisualisation(400,20,40,20);
+  return tree.getPaneTreeVisualisation();
+
   // //finding best depth --> 3
   // test.testDepth(0, 6);
   // //finding best forestsize --> 50
