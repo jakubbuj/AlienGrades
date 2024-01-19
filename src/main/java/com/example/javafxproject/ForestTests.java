@@ -1,3 +1,5 @@
+package com.example.javafxproject;
+
 public class ForestTests {
     private double[][] grades;
     private String[][] properties;

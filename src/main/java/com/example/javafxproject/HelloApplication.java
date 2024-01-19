@@ -6,7 +6,7 @@ import java.io.IOException;
 
 public class HelloApplication extends Application {
     @Override
-    public void start(Stage mainStage) throws IOException {
+    public  void start(Stage mainStage) throws IOException {
         HelloController.switchToMainScene(mainStage);
         // Creation of method switchToMainScene() was in order to implement buttons that go back to the main screen
         // without creating a new stage while start(Stage stage) was being called,

@@ -1,3 +1,5 @@
+package com.example.javafxproject;
+
 import java.util.HashSet;
 import java.util.Set;
 

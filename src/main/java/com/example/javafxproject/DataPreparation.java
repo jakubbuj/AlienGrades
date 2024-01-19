@@ -1,4 +1,4 @@
-
+package com.example.javafxproject;
 
 import java.util.Arrays;
 

@@ -1,3 +1,4 @@
+package com.example.javafxproject;
 
 public class RandomForest {
     private ForestTree[] treeCollection;

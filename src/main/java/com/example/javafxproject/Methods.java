@@ -1137,4 +1137,47 @@ public class Methods {
                         "\nStrong contradiction (1%) ("+(int)Frequency_distances_means_all[(int)(numOfPossibileCombiantions*0.99)]+"<)");
     return text;
     }
+    public static boolean isConvertibleToDoubleArray(String[] column) {
+        for (String value : column) {
+            try {
+                Double.parseDouble(value);
+            } catch (NumberFormatException e) {
+                return false;  // If any element cannot be converted, return false
+            }
+        }
+        return true;  // All elements can be converted
+    }
+    
+    public static double[] convertToDoubleArray(String[] column) {
+        if (!isConvertibleToDoubleArray(column)) {
+            throw new IllegalArgumentException("Not all elements can be converted to double.");
+        }
+    
+        double[] result = new double[column.length];
+        for (int i = 0; i < column.length; i++) {
+            result[i] = Double.parseDouble(column[i]);
+        }
+    
+        return result;
+    }
+        public static String[] getColumn(String[][] array, int columnIndex) {
+            int numRows = array.length;
+            String[] column = new String[numRows];
+    
+            for (int i = 0; i < numRows; i++) {
+                column[i] = array[i][columnIndex];
+            }
+    
+            return column;
+        }
+        public static double[] getColumn(double[][] array, int columnIndex) {
+            int numRows = array.length;
+            double[] column = new double[numRows];
+    
+            for (int i = 0; i < numRows; i++) {
+                column[i] = array[i][columnIndex];
+            }
+    
+            return column;
+        }
 }

@@ -1,3 +1,5 @@
+package com.example.javafxproject;
+
 public class Node {
     // For decision node
     private int attributeIndex;

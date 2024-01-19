@@ -1,13 +1,19 @@
+package com.example.javafxproject;
+
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.IOException;
 import java.util.*;
 
 
-public class Main{
+public class Phase3{
+/* 
+  public static void main(String[] args)  {
 
-  public static void main(String[] args) {
-  
+
     //SETTINGS
       //general
-        final int STUDENT_ID = 1000243;
+        final int STUDENT_ID = 1002347;
         final int COURSE = 1;  //courses without data: 10, 16, 19
 
       //tree 
@@ -25,9 +31,20 @@ public class Main{
 
 
 
+
+
+
+
+
+
+
+
+
     //loading files
-      final double[][] arrayOfCurrentGrades = Methods.File_To_Array("CurrentGrades.csv");
-      final String[][] arrayOfStudentInfo = Methods.File_To_Array_String("StudentInfo.csv");
+      final double[][] arrayOfCurrentGrades = Methods.File_To_Array("src/main/resources/com/example/javafxproject/CurrentGrades.csv");
+      final String[][] arrayOfStudentInfo = Methods.File_To_Array_String("src/main/resources/com/example/javafxproject/StudentInfo.csv");
+     
+
 
     //checking if student has properties
       if(arrayOfStudentInfo==null){
@@ -68,7 +85,7 @@ public class Main{
     //visualisising tree
       if (PRINT_TREE) tree.printTree();
       if (PRINT_FOREST) forest.printTree();
-
+     
     //testing the trees
     TreeTests test = new TreeTests(arrayOfCurrentGrades, arrayOfStudentInfo);
     System.out.println("tree accuracy: "+test.getAccuracy(tree, COURSE)); //accuracy for this tree on this course
@@ -84,7 +101,10 @@ public class Main{
     // ftest.testBootstrapSize(10, 50, 10);
     // //finding best amount of var --> 3
     // ftest.testVariables(1,4);
-  }
+    
+  }     
+*/
+
 }
 
 

@@ -1,3 +1,12 @@
+package com.example.javafxproject;
+
+//for javafx
+import javafx.scene.layout.Pane;
+import javafx.scene.paint.Color;
+import javafx.scene.shape.Rectangle;
+import javafx.scene.text.Text;
+import javafx.scene.text.TextAlignment;
+
 import java.util.*;
 
 public class BinaryDecisionTree {
@@ -224,7 +233,8 @@ public class BinaryDecisionTree {
             printTree(tree.getLeft(), indent + "  ");
             System.out.print(indent + "right: ");
             printTree(tree.getRight(), indent + "  ");
-            return;  // Exit the method after printing the decision condition
+
+                      return;  // Exit the method after printing the decision condition
         } else {
             System.out.println(tree.getValue());
         }
@@ -320,6 +330,86 @@ public class BinaryDecisionTree {
         }
     }
 
+    Pane binaryTreePane = new Pane();
+   
+    public void printTreeVisualisation( int x1,int y1,int x2, int y2) {
+        printTreeVisualisation(root, " ", x1, y1, x2, y2);
+    }
+    public void printTreeVisualisation(Node tree, String indent, int x1,int y1,int x2, int y2) {
+       
+        if (Double.isNaN(tree.getValue())) {
+
+            Rectangle leftRect = new Rectangle(100, 40, Color.GREEN);
+            leftRect.setStroke(Color.BLACK);
+            leftRect.setArcWidth(10);
+            leftRect.setArcHeight(10);
+            leftRect.setLayoutX(x1);
+            leftRect.setLayoutY(y1);
+
+            Text leftText = new Text(String.valueOf(
+                tree.getValue()+
+                "\nX_" + tree.getAttributeName() +  "<= " + tree.getThreshold() +  "? " + tree.getVarRed())
+                );
+            leftText.setTextAlignment(TextAlignment.CENTER);
+            leftText.setLayoutX(x1);
+            leftText.setLayoutY(y1);
+            
+            Rectangle rightRect = new Rectangle(100, 40, Color.RED);
+            rightRect.setStroke(Color.BLACK);
+            rightRect.setArcWidth(10);
+            rightRect.setArcHeight(10);
+            rightRect.setLayoutX(x2);
+            rightRect.setLayoutY(y2);
+
+            Text rightText = new Text(String.valueOf(
+                tree.getValue()+
+                "\nX_" + tree.getAttributeName() +  "<= " + tree.getThreshold() +  "? " + tree.getVarRed())
+                );
+            rightText.setTextAlignment(TextAlignment.CENTER);
+            rightText.setLayoutX(x2);
+            rightText.setLayoutY(y2);
+
+            System.out.println("X_" + tree.getAttributeName() + " <= " + tree.getThreshold() + " ? " + tree.getVarRed());
+
+             System.out.print(indent + "left: ");
+             printTreeVisualisation(tree.getLeft(), indent + "  ",x1-= x1*0.7,y1+=50,x2+= x2*0.7,y2+=50);
+
+
+            System.out.print(indent + "right: ");
+            printTreeVisualisation(tree.getRight(), indent + "  ",x1-= x1*0.7,y1+=50,x2+= x2*0.7,y2+=50);
+
+
+            binaryTreePane.getChildren().addAll(leftRect,leftText,rightRect,rightText );
+                      // Exit the method after printing the decision condition
+        } else {
+            //prints final prediction
+            Rectangle finalRect = new Rectangle(100, 40, Color.BLUE);
+            finalRect.setStroke(Color.BLACK);
+            finalRect.setArcWidth(10);
+            finalRect.setArcHeight(10);
+            finalRect.setLayoutX(x1/0.7);
+            finalRect.setLayoutY(y1);
+
+            Text finalText = new Text(String.valueOf(
+                tree.getValue()+
+                "\nX_" + tree.getAttributeName() +  "<= " + tree.getThreshold() +  "? " + tree.getVarRed())
+                );
+            finalText.setTextAlignment(TextAlignment.CENTER);
+            finalText.setLayoutX(x1/0.7);
+            finalText.setLayoutY(y1);
+
+            binaryTreePane.getChildren().addAll(finalRect,finalText);
+
+            System.out.println(tree.getValue());
+            
+        }
+        
+    }
+
+    public Pane getPaneTreeVisualisation(){
+        System.out.println("pane sent, let's see if it works");
+        return binaryTreePane;
+    }
 }
 
 
