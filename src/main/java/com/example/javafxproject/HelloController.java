@@ -1406,8 +1406,8 @@ public class HelloController {
         Label SPLITSLabel = new Label("Number of splits (keep at 2):");
         Label forsetOptionsLabel = new Label("Forest options ");
         forsetOptionsLabel.setStyle("-fx-font-size: 20;");
-        Label FOREST_SIZELabel = new Label("Data training size (Boostrapping): ");
-        Label BOOTSTRAP_SIZELabel  = new Label("Size of trainingdata that a tree is trained on:");
+        Label FOREST_SIZELabel = new Label("Data training size (bootstrapping): ");
+        Label BOOTSTRAP_SIZELabel  = new Label("Size of training data that a tree is trained on:");
         Label FOREST_VARLabel   = new Label("Number of variables a tree randomly selects:");
 
         // student atributes
@@ -1497,6 +1497,7 @@ public class HelloController {
                     // Integer.parseInt(textFieldBOOTSTRAP_SIZE.getText()),
                     // Integer.parseInt(textFieldFOREST_VAR.getText())
                 ));
+                p.setStyle("-fx-background-color: lightblue;");
                 hbox.getChildren().addAll(p);
                 //root.getChildren().addAll(hbox);
         });
