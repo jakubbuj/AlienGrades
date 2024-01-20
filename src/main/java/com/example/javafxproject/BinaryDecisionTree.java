@@ -179,14 +179,14 @@ public class BinaryDecisionTree {
     public int featureToIndex(String feature){
         ArrayList<String> Suruna = new ArrayList<String>(Arrays.asList(new String[]{"nulp","doot","lobi"}));
         ArrayList<String> Hurni = new ArrayList<String>(Arrays.asList(new String[]{"nothing","low","medium","full","high"}));
-        ArrayList<String> Lal =new ArrayList<String>( Arrays.asList(new String[]{"1 star","2 stars","3 stars","4 stars","5 stars"}));
-        
+        ArrayList<String> volta =new ArrayList<String>( Arrays.asList(new String[]{"1 star","2 stars","3 stars","4 stars","5 stars"}));
+
         if(Suruna.contains(feature)) return 0;
         if(Hurni.contains(feature)) return 1;
-        if(Lal.contains(feature)) return 3;
+        if(volta.contains(feature)) return 3;
         try {
             Integer.parseInt(feature);
-            return 3;
+            return 2;
         } catch (NumberFormatException e) {
             return Integer.MAX_VALUE;
         }
@@ -420,7 +420,7 @@ public class BinaryDecisionTree {
             finalRect.setLayoutX(x+cordX_fix);
             finalRect.setLayoutY(y);
 
-            Text finalText = new Text(String.valueOf("Prediction: "+tree.getValue()));
+            Text finalText = new Text(String.valueOf("Prediction: "+Methods.round(tree.getValue(),4)));
             
             finalText.setTextAlignment(TextAlignment.CENTER);
             finalText.setLayoutX(x+cordX_fix);
