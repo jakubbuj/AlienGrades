@@ -1458,7 +1458,7 @@ public class HelloController {
          vbox.setMargin(StudentOptionsLabel, new Insets(10, 0, 5, 0));
          vbox.setMargin(treeOptionsLabel, new Insets(20, 0, 5, 0));
          vbox.setMargin(forsetOptionsLabel, new Insets(20, 0, 5, 0));
-         hbox.getChildren().addAll(p, vbox);
+         hbox.getChildren().addAll(vbox);
          // main container
          root.getChildren().addAll(hbox);
 
@@ -1580,7 +1580,7 @@ public class HelloController {
   //visualisising tree
   if (PRINT_TREE) tree.printTree();
   if (PRINT_FOREST) forest.printTree();
-  tree.printTreeVisualisation(500,20,500,20);
+  tree.printTreeVisualisation(500,20);
   return tree.getPaneTreeVisualisation();
 
   // //finding best depth --> 3
