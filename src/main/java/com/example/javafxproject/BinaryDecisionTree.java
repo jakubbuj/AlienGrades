@@ -228,7 +228,7 @@ public class BinaryDecisionTree {
 
     public void printTree(Node tree, String indent) {
         if (Double.isNaN(tree.getValue())) {
-            System.out.println("X_" + tree.getAttributeName() + " <= " + tree.getThreshold() + " ? " + tree.getVarRed());
+            System.out.println("X_" + tree.getAttributeName() + " <= " + tree.getThreshold() + " ? " + Methods.round(tree.getVarRed(),5));
             System.out.print(indent + "left: ");
             printTree(tree.getLeft(), indent + "  ");
             System.out.print(indent + "right: ");
@@ -348,7 +348,7 @@ public class BinaryDecisionTree {
     
                 Text rootText = new Text(String.valueOf(
                     "X_" + tree.getAttributeName() +  "<= " + tree.getThreshold() + "?" +
-                    "\nVariance:" +tree.getVarRed())
+                    "\nVariance:" +Methods.round(tree.getVarRed(),5))
                     );
                 rootText.setTextAlignment(TextAlignment.CENTER);
                 rootText.setLayoutX(x);
@@ -371,7 +371,7 @@ public class BinaryDecisionTree {
     
                 Text leftText = new Text(String.valueOf(
                     "X_" + tree.getAttributeName() +  "<= " + tree.getThreshold() + "?" +
-                    "\nVariance:" +tree.getVarRed())
+                    "\nVariance:" +Methods.round(tree.getVarRed(),5))
                     );
                 leftText.setTextAlignment(TextAlignment.CENTER);
                 leftText.setLayoutX(x);
@@ -393,7 +393,7 @@ public class BinaryDecisionTree {
 
                 //binaryTreePane.getChildren().addAll(leftRect,leftText,rightRect,rightText );
                 binaryTreePane.getChildren().addAll(leftRect,leftText );
-                System.out.println("X_" + tree.getAttributeName() + " <= " + tree.getThreshold() + " ? " + tree.getVarRed());
+                System.out.println("X_" + tree.getAttributeName() + " <= " + tree.getThreshold() + " ? " + Methods.round(tree.getVarRed(),5));
 
                 System.out.print(indent + "left: ");
                 printTreeVisualisation(tree.getLeft(), indent + "  ",x-=100,y+=50, false,true);
