@@ -403,7 +403,7 @@ public class BinaryDecisionTree {
                 printTreeVisualisation(tree.getRight(), indent + "  ",x+=100,y+=50, false,false);
     
             }
-           
+            return;
             // Exit the method after printing the decision condition
         } else  { // leaf
             //prints final prediction
@@ -420,10 +420,8 @@ public class BinaryDecisionTree {
             finalRect.setLayoutX(x+cordX_fix);
             finalRect.setLayoutY(y);
 
-            Text finalText = new Text(String.valueOf(
-                "X_" + tree.getAttributeName() +  "<= " + tree.getThreshold() + "?" +
-                "\nVariance:" +tree.getVarRed())
-                );
+            Text finalText = new Text(String.valueOf("Prediction: "+tree.getValue()));
+            
             finalText.setTextAlignment(TextAlignment.CENTER);
             finalText.setLayoutX(x+cordX_fix);
             finalText.setLayoutY(y);

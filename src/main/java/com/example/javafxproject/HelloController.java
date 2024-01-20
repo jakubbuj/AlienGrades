@@ -1534,12 +1534,12 @@ public class HelloController {
       final boolean PRINT_TREE = false; //commandline visualisation
 
     //forest
-      final int FOREST_SIZE = 50; //how many trees a forest contains
+      final int FOREST_SIZE = 1; //how many trees a forest contains
       final int FOREST_DEPTH = 3; //depth for every tree in the forest
       final int FOREST_SPLITS = 2; //number of splits --> keep at 2
      final int BOOTSTRAP_SIZE = 25; //size of trainingdata that a tree is trained on
       final int FOREST_VAR =  3; //number of variables a tree randomly selects
-      final boolean PRINT_FOREST = true; //cmd line visualisation of the first tree in the forest
+      final boolean PRINT_FOREST = false; //cmd line visualisation of the first tree in the forest
 
   //loading files
     final double[][] arrayOfCurrentGrades = Methods.File_To_Array("src/main/resources/com/example/javafxproject/CurrentGrades.csv");
