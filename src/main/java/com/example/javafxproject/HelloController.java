@@ -1387,10 +1387,22 @@ public class HelloController {
         vbox.setPrefHeight(800); 
 
         // Options
+        // student atributes
         Label SVlabel = new Label("Suruna Value: ");
         Label HLlabel = new Label(" Hurni Level: ");
         Label Vlabel = new Label("Volta: ");
         Label Lclabel = new Label("Lal Count: ");
+        // Course
+        Label COURSELabel = new Label(" Course: ");
+        //tree / forset
+        Label treeOptionsLabel = new Label("Tree options: ");
+        Label DEPTHLabel = new Label("tree Depth ");
+        Label SPLITSLabel = new Label("Number of splits (keep at 2):");
+        Label forsetOptionsLabel = new Label("Forest options ");
+        Label FOREST_SIZELabel = new Label("Data training size (Boostrapping): ");
+        Label BOOTSTRAP_SIZELabel  = new Label("Size of trainingdata that a tree is trained on:");
+        Label FOREST_VARLabel   = new Label("Number of variables a tree randomly selects:");
+
         ChoiceBox<String> SurunaValueChoiceBox = new ChoiceBox<>();
         SurunaValueChoiceBox.getItems().addAll("nulp", "doot", "lobi");
         ChoiceBox<String> HurniLevelChoiceBox = new ChoiceBox<>();
@@ -1398,6 +1410,7 @@ public class HelloController {
         ChoiceBox<String> VoltaChoiceBox = new ChoiceBox<>();
         VoltaChoiceBox.getItems().addAll("1 star", "2 star", "3 star", "4 star", "5 star");
         TextField textFieldLalCount = new TextField();
+        textFieldLalCount.setPrefWidth(200);
         textFieldLalCount.setPromptText("Enter Lal Count: 1-100");
 
         // String[] SurunaValueOption = {"nulp"};
@@ -1425,7 +1438,6 @@ public class HelloController {
             // HurniLevelOption[0] =  HurniLevelChoiceBox.getValue();
             // VoltaChoiceOption[0] = VoltaChoiceBox.getValue();
             // LalCountOption[0] = textFieldLalCount.getText();
-            
             p.getChildren().addAll(drawTree(
                     SurunaValueChoiceBox.getValue(),
                     HurniLevelChoiceBox.getValue(),
@@ -1433,7 +1445,7 @@ public class HelloController {
                     textFieldLalCount.getText()
                 ));
                 hbox.getChildren().addAll(p);
-                root.getChildren().addAll(hbox);
+                //root.getChildren().addAll(hbox);
         });
         vbox.getChildren().addAll(
         SVlabel,
@@ -1530,7 +1542,7 @@ public class HelloController {
   //visualisising tree
   if (PRINT_TREE) tree.printTree();
   if (PRINT_FOREST) forest.printTree();
-  tree.printTreeVisualisation(400,20,40,20);
+  tree.printTreeVisualisation(400,20,400,20);
   return tree.getPaneTreeVisualisation();
 
   // //finding best depth --> 3

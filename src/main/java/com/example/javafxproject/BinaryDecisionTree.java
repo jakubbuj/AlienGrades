@@ -333,69 +333,90 @@ public class BinaryDecisionTree {
     Pane binaryTreePane = new Pane();
    
     public void printTreeVisualisation( int x1,int y1,int x2, int y2) {
-        printTreeVisualisation(root, " ", x1, y1, x2, y2);
+        printTreeVisualisation(root, " ", x1, y1, x2, y2, true);
     }
-    public void printTreeVisualisation(Node tree, String indent, int x1,int y1,int x2, int y2) {
+    public void printTreeVisualisation(Node tree, String indent, int x1,int y1,int x2, int y2,boolean firstInit) {
        
         if (Double.isNaN(tree.getValue())) {
+            if(firstInit){  // checks if method is runned first time, prevents reapeating root
+                Rectangle rootRect = new Rectangle(100, 40, Color.YELLOWGREEN);
+                rootRect.setStroke(Color.YELLOWGREEN);
+                rootRect.setArcWidth(10);
+                rootRect.setArcHeight(10);
+                rootRect.setLayoutX(x2);
+                rootRect.setLayoutY(y2);
+    
+                Text rootText = new Text(String.valueOf(
+                    "X_" + tree.getAttributeName() +  "<= " + tree.getThreshold() + "?" +
+                    "\nVariance:" +tree.getVarRed())
+                    );
+                rootText.setTextAlignment(TextAlignment.CENTER);
+                rootText.setLayoutX(x2);
+                rootText.setLayoutY(y2);
 
-            Rectangle leftRect = new Rectangle(100, 40, Color.GREEN);
-            leftRect.setStroke(Color.BLACK);
-            leftRect.setArcWidth(10);
-            leftRect.setArcHeight(10);
-            leftRect.setLayoutX(x1);
-            leftRect.setLayoutY(y1);
+                binaryTreePane.getChildren().addAll(rootRect, rootText );
 
-            Text leftText = new Text(String.valueOf(
-                tree.getValue()+
-                "\nX_" + tree.getAttributeName() +  "<= " + tree.getThreshold() +  "? " + tree.getVarRed())
-                );
-            leftText.setTextAlignment(TextAlignment.CENTER);
-            leftText.setLayoutX(x1);
-            leftText.setLayoutY(y1);
-            
-            Rectangle rightRect = new Rectangle(100, 40, Color.RED);
-            rightRect.setStroke(Color.BLACK);
-            rightRect.setArcWidth(10);
-            rightRect.setArcHeight(10);
-            rightRect.setLayoutX(x2);
-            rightRect.setLayoutY(y2);
+                printTreeVisualisation(tree.getLeft(), indent + "  ",x1-= x1*0.2,y1+=50,x2+= x2*0.2,y2+=50, false);
+                printTreeVisualisation(tree.getRight(), indent + "  ",x1-= x1*0.2,y1+=50,x2+= x2*0.2,y2+=50, false);
 
-            Text rightText = new Text(String.valueOf(
-                tree.getValue()+
-                "\nX_" + tree.getAttributeName() +  "<= " + tree.getThreshold() +  "? " + tree.getVarRed())
-                );
-            rightText.setTextAlignment(TextAlignment.CENTER);
-            rightText.setLayoutX(x2);
-            rightText.setLayoutY(y2);
+            }else{ // nodes
+                Rectangle leftRect = new Rectangle(100, 40, Color.GREEN);
+                leftRect.setStroke(Color.BLACK);
+                leftRect.setArcWidth(10);
+                leftRect.setArcHeight(10);
+                leftRect.setLayoutX(x1);
+                leftRect.setLayoutY(y1);
+    
+                Text leftText = new Text(String.valueOf(
+                    "X_" + tree.getAttributeName() +  "<= " + tree.getThreshold() + "?" +
+                    "\nVariance:" +tree.getVarRed())
+                    );
+                leftText.setTextAlignment(TextAlignment.CENTER);
+                leftText.setLayoutX(x1);
+                leftText.setLayoutY(y1);
+                
+                Rectangle rightRect = new Rectangle(100, 40, Color.RED);
+                rightRect.setStroke(Color.BLACK);
+                rightRect.setArcWidth(10);
+                rightRect.setArcHeight(10);
+                rightRect.setLayoutX(x2);
+                rightRect.setLayoutY(y2);
+    
+                Text rightText = new Text(String.valueOf(
+                    "X_" + tree.getAttributeName() +  "<= " + tree.getThreshold() + "?" +
+                    "\nVariance:" +tree.getVarRed())
+                    );
+                rightText.setTextAlignment(TextAlignment.CENTER);
+                rightText.setLayoutX(x2);
+                rightText.setLayoutY(y2);
 
+                binaryTreePane.getChildren().addAll(leftRect,leftText,rightRect,rightText );
+            }
             System.out.println("X_" + tree.getAttributeName() + " <= " + tree.getThreshold() + " ? " + tree.getVarRed());
 
-             System.out.print(indent + "left: ");
-             printTreeVisualisation(tree.getLeft(), indent + "  ",x1-= x1*0.7,y1+=50,x2+= x2*0.7,y2+=50);
+            System.out.print(indent + "left: ");
+            printTreeVisualisation(tree.getLeft(), indent + "  ",x1-= x1*0.2,y1+=50,x2+= x2*0.2,y2+=50, false);
 
 
             System.out.print(indent + "right: ");
-            printTreeVisualisation(tree.getRight(), indent + "  ",x1-= x1*0.7,y1+=50,x2+= x2*0.7,y2+=50);
+            printTreeVisualisation(tree.getRight(), indent + "  ",x1-= x1*0.2,y1+=50,x2+= x2*0.2,y2+=50, false);
 
-
-            binaryTreePane.getChildren().addAll(leftRect,leftText,rightRect,rightText );
-                      // Exit the method after printing the decision condition
-        } else {
+            // Exit the method after printing the decision condition
+        } else { // leaf
             //prints final prediction
             Rectangle finalRect = new Rectangle(100, 40, Color.BLUE);
             finalRect.setStroke(Color.BLACK);
             finalRect.setArcWidth(10);
             finalRect.setArcHeight(10);
-            finalRect.setLayoutX(x1/0.7);
+            finalRect.setLayoutX(x1/0.9);
             finalRect.setLayoutY(y1);
 
             Text finalText = new Text(String.valueOf(
-                tree.getValue()+
-                "\nX_" + tree.getAttributeName() +  "<= " + tree.getThreshold() +  "? " + tree.getVarRed())
+                "X_" + tree.getAttributeName() +  "<= " + tree.getThreshold() + "?" +
+                "\nVariance:" +tree.getVarRed())
                 );
             finalText.setTextAlignment(TextAlignment.CENTER);
-            finalText.setLayoutX(x1/0.7);
+            finalText.setLayoutX(x1/0.9);
             finalText.setLayoutY(y1);
 
             binaryTreePane.getChildren().addAll(finalRect,finalText);
@@ -407,7 +428,6 @@ public class BinaryDecisionTree {
     }
 
     public Pane getPaneTreeVisualisation(){
-        System.out.println("pane sent, let's see if it works");
         return binaryTreePane;
     }
 }
