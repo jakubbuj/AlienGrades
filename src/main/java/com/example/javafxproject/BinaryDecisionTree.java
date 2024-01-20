@@ -233,8 +233,7 @@ public class BinaryDecisionTree {
             printTree(tree.getLeft(), indent + "  ");
             System.out.print(indent + "right: ");
             printTree(tree.getRight(), indent + "  ");
-
-                      return;  // Exit the method after printing the decision condition
+            return;  // Exit the method after printing the decision condition
         } else {
             System.out.println(tree.getValue());
         }
@@ -333,9 +332,12 @@ public class BinaryDecisionTree {
     Pane binaryTreePane = new Pane();
    
     public void printTreeVisualisation( int x,int y) {
-        printTreeVisualisation(root, " ", x, y, true,false);
+        printTreeVisualisation(root, " ",x, y, true,false, 0);
     }
-    public void printTreeVisualisation(Node tree, String indent, int x,int y,boolean firstInit,boolean DIRECTION) {
+    public void printTreeVisualisation(Node tree, String indent, int x,int y,boolean firstInit,boolean DIRECTION, int depth) {
+        int offsetY = 50;
+        int offsetX = (depth != 0)? 125/depth : 250;
+
        //Last Direction checks if the least leaft should be on the right or left
         if (Double.isNaN(tree.getValue())) {
             if(firstInit){  // checks if method is runned first time, prevents reapeating root
@@ -352,12 +354,12 @@ public class BinaryDecisionTree {
                     );
                 rootText.setTextAlignment(TextAlignment.CENTER);
                 rootText.setLayoutX(x);
-                rootText.setLayoutY(y);
+                rootText.setLayoutY(y+20);
 
                 binaryTreePane.getChildren().addAll(rootRect, rootText);
 
-                printTreeVisualisation(tree.getLeft(), indent + "  ",x-=100,y+=50, false,true);
-                printTreeVisualisation(tree.getRight(), indent + "  ",x+= 100,y+=50, false,false);
+                printTreeVisualisation(tree.getRight(), indent + "  ",x+offsetX,y+offsetY, false,false, depth+1);
+                printTreeVisualisation(tree.getLeft(), indent + "  ",x-offsetX,y+offsetY, false,true, depth+1);
 
             }else{ // nodes
                 Rectangle leftRect = new Rectangle(100, 40, Color.YELLOWGREEN);
@@ -375,7 +377,7 @@ public class BinaryDecisionTree {
                     );
                 leftText.setTextAlignment(TextAlignment.CENTER);
                 leftText.setLayoutX(x);
-                leftText.setLayoutY(y);
+                leftText.setLayoutY(y+20);
                 
                 // Rectangle rightRect = new Rectangle(100, 40, Color.ORANGERED);
                 // rightRect.setStroke(Color.ORANGERED);
@@ -396,35 +398,29 @@ public class BinaryDecisionTree {
                 System.out.println("X_" + tree.getAttributeName() + " <= " + tree.getThreshold() + " ? " + Methods.round(tree.getVarRed(),5));
 
                 System.out.print(indent + "left: ");
-                printTreeVisualisation(tree.getLeft(), indent + "  ",x-=100,y+=50, false,true);
+                printTreeVisualisation(tree.getLeft(), indent + "  ",x-offsetX,y+offsetY, false,true, depth+1);
     
     
                 System.out.print(indent + "right: ");
-                printTreeVisualisation(tree.getRight(), indent + "  ",x+=100,y+=50, false,false);
+                printTreeVisualisation(tree.getRight(), indent + "  ",x+offsetX,y+offsetY, false,false, depth+1);
     
+                return;
             }
-            return;
             // Exit the method after printing the decision condition
         } else  { // leaf
             //prints final prediction
-            int cordX_fix=0;
-            if(DIRECTION){//left
-                cordX_fix = 100;
-            }else{ 
-                cordX_fix = -100;
-            }
             Rectangle finalRect = new Rectangle(100, 40, Color.LIGHTBLUE);
             finalRect.setStroke(Color.LIGHTBLUE);
             finalRect.setArcWidth(10);
             finalRect.setArcHeight(10);
-            finalRect.setLayoutX(x+cordX_fix);
+            finalRect.setLayoutX(x);
             finalRect.setLayoutY(y);
 
             Text finalText = new Text(String.valueOf("Prediction: "+Methods.round(tree.getValue(),4)));
             
             finalText.setTextAlignment(TextAlignment.CENTER);
-            finalText.setLayoutX(x+cordX_fix);
-            finalText.setLayoutY(y);
+            finalText.setLayoutX(x);
+            finalText.setLayoutY(y+2);
 
             binaryTreePane.getChildren().addAll(finalRect,finalText);
 

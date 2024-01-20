@@ -1497,7 +1497,7 @@ public class HelloController {
                     // Integer.parseInt(textFieldBOOTSTRAP_SIZE.getText()),
                     // Integer.parseInt(textFieldFOREST_VAR.getText())
                 ));
-                p.setStyle("-fx-background-color: lightblue;");
+               
                 hbox.getChildren().addAll(p);
                 //root.getChildren().addAll(hbox);
         });
@@ -1530,7 +1530,7 @@ public class HelloController {
       final int COURSE = 1;  //courses without data: 10, 16, 19
 
     //tree 
-      final int DEPTH = 3; 
+      final int DEPTH = 2; 
       final int SPLITS = 2; //number of splits --> keep at 2
       final boolean PRINT_TREE = false; //commandline visualisation
 
@@ -1591,7 +1591,7 @@ public class HelloController {
   //visualisising tree
   if (PRINT_TREE) tree.printTree();
   if (PRINT_FOREST) forest.printTree();
-  tree.printTreeVisualisation(500,20);
+  tree.printTreeVisualisation(450,20);
   return tree.getPaneTreeVisualisation();
 
   // //finding best depth --> 3
