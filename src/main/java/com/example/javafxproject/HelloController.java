@@ -1383,61 +1383,108 @@ public class HelloController {
         
         //options container 
         VBox vbox = new VBox();
-        vbox.setPrefWidth(460);  
+        vbox.setPrefWidth(260);  
         vbox.setPrefHeight(800); 
 
         // Options
+        Label OptionsLabel = new Label("Options ");
+        OptionsLabel.setStyle("-fx-font-size: 24;");
         // student atributes
+        Label StudentOptionsLabel = new Label("Student atributes: ");
+        StudentOptionsLabel.setStyle("-fx-font-size: 20;");
         Label SVlabel = new Label("Suruna Value: ");
         Label HLlabel = new Label(" Hurni Level: ");
         Label Vlabel = new Label("Volta: ");
         Label Lclabel = new Label("Lal Count: ");
         // Course
         Label COURSELabel = new Label(" Course: ");
+        
         //tree / forset
         Label treeOptionsLabel = new Label("Tree options: ");
+        treeOptionsLabel.setStyle("-fx-font-size: 20;");
         Label DEPTHLabel = new Label("tree Depth ");
         Label SPLITSLabel = new Label("Number of splits (keep at 2):");
         Label forsetOptionsLabel = new Label("Forest options ");
+        forsetOptionsLabel.setStyle("-fx-font-size: 20;");
         Label FOREST_SIZELabel = new Label("Data training size (Boostrapping): ");
         Label BOOTSTRAP_SIZELabel  = new Label("Size of trainingdata that a tree is trained on:");
         Label FOREST_VARLabel   = new Label("Number of variables a tree randomly selects:");
 
+        // student atributes
         ChoiceBox<String> SurunaValueChoiceBox = new ChoiceBox<>();
         SurunaValueChoiceBox.getItems().addAll("nulp", "doot", "lobi");
+        SurunaValueChoiceBox.setValue("nulp");
         ChoiceBox<String> HurniLevelChoiceBox = new ChoiceBox<>();
         HurniLevelChoiceBox.getItems().addAll("full", "high", "medium", "low", "nothing");
+        HurniLevelChoiceBox.setValue("full");
         ChoiceBox<String> VoltaChoiceBox = new ChoiceBox<>();
         VoltaChoiceBox.getItems().addAll("1 star", "2 star", "3 star", "4 star", "5 star");
+        VoltaChoiceBox.setValue("1 star");
         TextField textFieldLalCount = new TextField();
-        textFieldLalCount.setPrefWidth(200);
-        textFieldLalCount.setPromptText("Enter Lal Count: 1-100");
-
-        // String[] SurunaValueOption = {"nulp"};
-        // String[] HurniLevelOption = {"full"};
-        // String[] VoltaChoiceOption = {"1 star"};
-        // String[] LalCountOption = {"1"};
+        textFieldLalCount.setMaxWidth(200);
+        textFieldLalCount.setPromptText("22");
+        // course
+        ChoiceBox<String> COURSEChoiceBox = new ChoiceBox<>();
+        COURSEChoiceBox.getItems().addAll("JTE-234","ATE-003","TGL-013","PPL-239","WDM-974","GHL-823","HLU-200","MON-014","FEA-907","LPG-307","TSO-010","LDE-009","JJP-001","MTE-004","LUU-003","LOE-103","PLO-132","BKO-800","SLE-332","BKO-801","DSE-003","DSE-005","ATE-014","JTW-004","ATE-008","DSE-007","ATE-214","JHF-101","KMO-007","WOT-104");
+        COURSEChoiceBox.setValue("JTE-234");
+        //tree / forest
+        ChoiceBox<String> DEPTHChoiceBox = new ChoiceBox<>();
+        DEPTHChoiceBox.getItems().addAll("1", "2", "3", "4", "5", "6", "7", "8");
+        DEPTHChoiceBox.setValue("3");
+        ChoiceBox<String> SPLITSChoiceBox = new ChoiceBox<>();
+        SPLITSChoiceBox.getItems().addAll("1", "2", "3","4","5");
+        SPLITSChoiceBox.setValue("2");
+        TextField textFieldFOREST_SIZE = new TextField();
+        textFieldFOREST_SIZE.setMaxWidth(200);
+        textFieldFOREST_SIZE.setPromptText("100");
+        TextField textFieldBOOTSTRAP_SIZE = new TextField();
+        textFieldBOOTSTRAP_SIZE.setMaxWidth(200);
+        textFieldBOOTSTRAP_SIZE.setPromptText("25");
+        TextField textFieldFOREST_VAR = new TextField();
+        textFieldFOREST_VAR.setMaxWidth(200);
+        textFieldFOREST_VAR.setPromptText("3");
 
         Button submitButton = new Button("Submit");
 
          // visulaisation
          Pane p = new Pane();
-         p.setPrefWidth(800);  
-         p.setPrefHeight(800); 
- 
+         p.setPrefWidth(1000);  
+         p.setPrefHeight(1000); 
  
          //Container Left-Right
          HBox hbox = new HBox(10);
          hbox.setPadding(new Insets(10));
+         vbox.setMargin(OptionsLabel, new Insets(10, 0, 10, 0));
+         vbox.setMargin(StudentOptionsLabel, new Insets(10, 0, 5, 0));
+         vbox.setMargin(treeOptionsLabel, new Insets(20, 0, 5, 0));
+         vbox.setMargin(forsetOptionsLabel, new Insets(20, 0, 5, 0));
          hbox.getChildren().addAll(p, vbox);
+         // main container
          root.getChildren().addAll(hbox);
+
+         vbox.getChildren().addAll(
+            OptionsLabel,StudentOptionsLabel,
+                //student options
+            SVlabel,SurunaValueChoiceBox,
+            HLlabel,HurniLevelChoiceBox,
+            Vlabel, VoltaChoiceBox,
+            Lclabel,textFieldLalCount, 
+                // course
+            COURSELabel,COURSEChoiceBox,
+                // tree/forest
+            treeOptionsLabel,
+            DEPTHLabel,DEPTHChoiceBox,
+            SPLITSLabel,SPLITSChoiceBox,
+            forsetOptionsLabel,
+            FOREST_SIZELabel,textFieldFOREST_SIZE,
+            BOOTSTRAP_SIZELabel ,textFieldBOOTSTRAP_SIZE,
+            FOREST_VARLabel,textFieldFOREST_VAR,
+            
+            submitButton
+        );
 
         //event listeners for options
         submitButton.setOnAction(event -> {
-            // SurunaValueOption[0] = SurunaValueChoiceBox.getValue();
-            // HurniLevelOption[0] =  HurniLevelChoiceBox.getValue();
-            // VoltaChoiceOption[0] = VoltaChoiceBox.getValue();
-            // LalCountOption[0] = textFieldLalCount.getText();
             p.getChildren().addAll(drawTree(
                     SurunaValueChoiceBox.getValue(),
                     HurniLevelChoiceBox.getValue(),
@@ -1447,17 +1494,7 @@ public class HelloController {
                 hbox.getChildren().addAll(p);
                 //root.getChildren().addAll(hbox);
         });
-        vbox.getChildren().addAll(
-        SVlabel,
-        SurunaValueChoiceBox,
-        HLlabel,
-        HurniLevelChoiceBox,
-        Vlabel,
-        VoltaChoiceBox,
-        Lclabel,
-        textFieldLalCount,
-        submitButton
-        );
+       
 
        
     
@@ -1530,6 +1567,7 @@ public class HelloController {
     System.out.println("tree prediction: "+ tree.predict(arrayOfStudentInfo[STUDENT_ID]));
     System.out.println("forest prediction: "+ forest.predict(arrayOfStudentInfo[STUDENT_ID]));
     System.out.println();
+    System.out.println("Format: of arrayOfStudentInfo[STUDENT_ID] "+ Arrays.toString(arrayOfStudentInfo[STUDENT_ID]));
 
   
   //testing the trees
@@ -1542,7 +1580,7 @@ public class HelloController {
   //visualisising tree
   if (PRINT_TREE) tree.printTree();
   if (PRINT_FOREST) forest.printTree();
-  tree.printTreeVisualisation(400,20,400,20);
+  tree.printTreeVisualisation(500,20,500,20);
   return tree.getPaneTreeVisualisation();
 
   // //finding best depth --> 3

@@ -395,11 +395,11 @@ public class BinaryDecisionTree {
             System.out.println("X_" + tree.getAttributeName() + " <= " + tree.getThreshold() + " ? " + tree.getVarRed());
 
             System.out.print(indent + "left: ");
-            printTreeVisualisation(tree.getLeft(), indent + "  ",x1-= x1*0.2,y1+=50,x2+= x2*0.2,y2+=50, false);
+            printTreeVisualisation(tree.getLeft(), indent + "  ",x1-=100,y1+=50,x2+= 100,y2+=50, false);
 
 
             System.out.print(indent + "right: ");
-            printTreeVisualisation(tree.getRight(), indent + "  ",x1-= x1*0.2,y1+=50,x2+= x2*0.2,y2+=50, false);
+            printTreeVisualisation(tree.getRight(), indent + "  ",x1-= 100,y1+=50,x2+=100,y2+=50, false);
 
             // Exit the method after printing the decision condition
         } else { // leaf
@@ -408,7 +408,7 @@ public class BinaryDecisionTree {
             finalRect.setStroke(Color.BLACK);
             finalRect.setArcWidth(10);
             finalRect.setArcHeight(10);
-            finalRect.setLayoutX(x1/0.9);
+            finalRect.setLayoutX(x1-100);
             finalRect.setLayoutY(y1);
 
             Text finalText = new Text(String.valueOf(
@@ -416,7 +416,7 @@ public class BinaryDecisionTree {
                 "\nVariance:" +tree.getVarRed())
                 );
             finalText.setTextAlignment(TextAlignment.CENTER);
-            finalText.setLayoutX(x1/0.9);
+            finalText.setLayoutX(x1-100);
             finalText.setLayoutY(y1);
 
             binaryTreePane.getChildren().addAll(finalRect,finalText);
