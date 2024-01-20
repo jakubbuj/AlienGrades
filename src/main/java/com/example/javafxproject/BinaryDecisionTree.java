@@ -393,16 +393,17 @@ public class BinaryDecisionTree {
 
                 //binaryTreePane.getChildren().addAll(leftRect,leftText,rightRect,rightText );
                 binaryTreePane.getChildren().addAll(leftRect,leftText );
+                System.out.println("X_" + tree.getAttributeName() + " <= " + tree.getThreshold() + " ? " + tree.getVarRed());
+
+                System.out.print(indent + "left: ");
+                printTreeVisualisation(tree.getLeft(), indent + "  ",x-=100,y+=50, false,true);
+    
+    
+                System.out.print(indent + "right: ");
+                printTreeVisualisation(tree.getRight(), indent + "  ",x+=100,y+=50, false,false);
+    
             }
-            System.out.println("X_" + tree.getAttributeName() + " <= " + tree.getThreshold() + " ? " + tree.getVarRed());
-
-            System.out.print(indent + "left: ");
-            printTreeVisualisation(tree.getLeft(), indent + "  ",x-=100,y+=50, false,true);
-
-
-            System.out.print(indent + "right: ");
-            printTreeVisualisation(tree.getRight(), indent + "  ",x+=100,y+=50, false,false);
-
+           
             // Exit the method after printing the decision condition
         } else  { // leaf
             //prints final prediction
@@ -416,8 +417,8 @@ public class BinaryDecisionTree {
             finalRect.setStroke(Color.LIGHTBLUE);
             finalRect.setArcWidth(10);
             finalRect.setArcHeight(10);
-            finalRect.setLayoutX(x);
-            finalRect.setLayoutY(y+50);
+            finalRect.setLayoutX(x+cordX_fix);
+            finalRect.setLayoutY(y);
 
             Text finalText = new Text(String.valueOf(
                 "X_" + tree.getAttributeName() +  "<= " + tree.getThreshold() + "?" +
@@ -425,7 +426,7 @@ public class BinaryDecisionTree {
                 );
             finalText.setTextAlignment(TextAlignment.CENTER);
             finalText.setLayoutX(x+cordX_fix);
-            finalText.setLayoutY(y+50);
+            finalText.setLayoutY(y);
 
             binaryTreePane.getChildren().addAll(finalRect,finalText);
 
