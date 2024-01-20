@@ -1489,7 +1489,13 @@ public class HelloController {
                     SurunaValueChoiceBox.getValue(),
                     HurniLevelChoiceBox.getValue(),
                     VoltaChoiceBox.getValue(),
-                    textFieldLalCount.getText()
+                    Integer.parseInt(textFieldLalCount.getText())//,
+                    // COURSEChoiceBox.getValue(),
+                    // Integer.parseInt(DEPTHChoiceBox.getValue()),
+                    // Integer.parseInt(SPLITSChoiceBox.getValue()),
+                    // Integer.parseInt(textFieldFOREST_SIZE.getText()),
+                    // Integer.parseInt(textFieldBOOTSTRAP_SIZE.getText()),
+                    // Integer.parseInt(textFieldFOREST_VAR.getText())
                 ));
                 hbox.getChildren().addAll(p);
                 //root.getChildren().addAll(hbox);
@@ -1506,8 +1512,16 @@ public class HelloController {
     }
 
   
-
-   private static Pane drawTree(String AtrSurunaValue,String AtrHurniLevel,String AtrVolta,String AtrLalCount ){
+    // Drawing tree 
+   private static Pane drawTree
+   (
+    //student atr parameters
+    String AtrSurunaValue,String AtrHurniLevel,String AtrVolta,int AtrLalCount//,
+    //course 
+    //String COURSE_ID,
+    //tree/forest
+    //int DEPTH,  int SPLITS, int FOREST_SIZE,int BOOTSTRAP_SIZE,int FOREST_VAR
+    ) {
 
     //SETTINGS
       //general
@@ -1523,7 +1537,7 @@ public class HelloController {
       final int FOREST_SIZE = 50; //how many trees a forest contains
       final int FOREST_DEPTH = 3; //depth for every tree in the forest
       final int FOREST_SPLITS = 2; //number of splits --> keep at 2
-      final int BOOTSTRAP_SIZE = 25; //size of trainingdata that a tree is trained on
+     final int BOOTSTRAP_SIZE = 25; //size of trainingdata that a tree is trained on
       final int FOREST_VAR =  3; //number of variables a tree randomly selects
       final boolean PRINT_FOREST = true; //cmd line visualisation of the first tree in the forest
 
@@ -1566,10 +1580,6 @@ public class HelloController {
   //making a prediction
     System.out.println("tree prediction: "+ tree.predict(arrayOfStudentInfo[STUDENT_ID]));
     System.out.println("forest prediction: "+ forest.predict(arrayOfStudentInfo[STUDENT_ID]));
-    System.out.println();
-    System.out.println("Format: of arrayOfStudentInfo[STUDENT_ID] "+ Arrays.toString(arrayOfStudentInfo[STUDENT_ID]));
-
-  
   //testing the trees
   TreeTests test = new TreeTests(arrayOfCurrentGrades, arrayOfStudentInfo);
   System.out.println("tree accuracy: "+test.getAccuracy(tree, COURSE)); //accuracy for this tree on this course
