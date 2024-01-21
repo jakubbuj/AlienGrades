@@ -1487,7 +1487,7 @@ public class HelloController {
             SVlabel,SurunaValueChoiceBox,
             HLlabel,HurniLevelChoiceBox,
             Vlabel, VoltaChoiceBox,
-            Lclabel,textFieldLalCount, 
+            Lclabel,textFieldLalCount,
                 // course
             COURSELabel,COURSEChoiceBox,
                 // tree/forest
@@ -1498,7 +1498,7 @@ public class HelloController {
             FOREST_SIZELabel,textFieldFOREST_SIZE,
             BOOTSTRAP_SIZELabel ,textFieldBOOTSTRAP_SIZE,
             FOREST_VARLabel,textFieldFOREST_VAR,
-            
+
             submitButton,
             backButton
 
@@ -1506,6 +1506,9 @@ public class HelloController {
 
         //event listeners for options
         submitButton.setOnAction(event -> {
+            hbox.getChildren().clear();
+            root.getChildren().clear();
+            p.getChildren().clear();
             p.getChildren().addAll(drawTree(
                     SurunaValueChoiceBox.getValue(),
                     HurniLevelChoiceBox.getValue(),
@@ -1518,8 +1521,9 @@ public class HelloController {
                     Integer.parseInt(textFieldBOOTSTRAP_SIZE.getText()),
                     Integer.parseInt(textFieldFOREST_VAR.getText())
                 ));
-               
-                hbox.getChildren().addAll(p);
+
+                hbox.getChildren().addAll(vbox, p);
+         root.getChildren().addAll(hbox);
                 //root.getChildren().addAll(hbox);
         });
        
@@ -1567,8 +1571,8 @@ public class HelloController {
       final boolean PRINT_FOREST = false; //cmd line visualisation of the first tree in the forest
 
   //loading files
-    final double[][] arrayOfCurrentGrades = Methods.File_To_Array("src/main/resources/com/example/javafxproject/CurrentGrades.csv");
-    final String[][] arrayOfStudentInfo = Methods.File_To_Array_String("src/main/resources/com/example/javafxproject/StudentInfo.csv");
+    final double[][] arrayOfCurrentGrades = current_grades;
+    final String[][] arrayOfStudentInfo = student_properties;
    String StudentInfo[]={AtrSurunaValue, AtrHurniLevel,Integer.toString(AtrLalCount), AtrVolta};
 
 
@@ -1630,7 +1634,7 @@ public class HelloController {
   if (PRINT_FOREST) forest.printTree();
   // in GUI
   // tree pane  generation
-  tree.printTreeVisualisation(450,300);
+  tree.printTreeVisualisation(450,200);
   //outputs pane 
   
   Label predictionOutputLabel = new Label("Predictions: ");
