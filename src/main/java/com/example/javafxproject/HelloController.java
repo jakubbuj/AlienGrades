@@ -1630,7 +1630,7 @@ public class HelloController {
   if (PRINT_FOREST) forest.printTree();
   // in GUI
   // tree pane  generation
-  tree.printTreeVisualisation(450,20);
+  tree.printTreeVisualisation(450,300);
   //outputs pane 
   
   Label predictionOutputLabel = new Label("Predictions: ");
@@ -1638,8 +1638,8 @@ public class HelloController {
   predictionOutputLabel.setStyle("-fx-font-size: 24;");
   testOutputLabel.setStyle("-fx-font-size: 24;");
 
-  Text treePredicitonText = new Text("Tree: "+tree.predict(arrayOfStudentInfo[STUDENT_ID]));
-  Text forestPredicitonText = new Text("Forest: "+forest.predict(arrayOfStudentInfo[STUDENT_ID]));
+  Text treePredicitonText = new Text("Tree: "+Methods.round(tree.predict(arrayOfStudentInfo[STUDENT_ID]), 2));
+  Text forestPredicitonText = new Text("Forest: "+Methods.round(forest.predict(arrayOfStudentInfo[STUDENT_ID]), 2));
 
   Text treeTestText = new Text("Tree: "+ test.getAccuracy(tree, COURSE));
   Text forestTestText = new Text("Forest: "+ftest.getAccuracy(forest, COURSE));
@@ -1657,7 +1657,7 @@ public class HelloController {
   containerIn2.getChildren().addAll(testOutputLabel,treeTestText,forestTestText);
   containerOut.getChildren().addAll(containerIn1,containerIn2);
 
-  VBox.setMargin(predictionOutputLabel, new Insets(10, 0, 0, 20));
+  VBox.setMargin(predictionOutputLabel, new Insets(10, 0, 0, 80));
   VBox.setMargin(testOutputLabel, new Insets(10, 0, 0, 20));
   containerOut.setSpacing(20);
   

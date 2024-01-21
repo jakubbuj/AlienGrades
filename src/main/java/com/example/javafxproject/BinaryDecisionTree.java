@@ -353,8 +353,8 @@ public class BinaryDecisionTree {
                     "\nVariance:" +Methods.round(tree.getVarRed(),5))
                     );
                 rootText.setTextAlignment(TextAlignment.CENTER);
-                rootText.setLayoutX(x);
-                rootText.setLayoutY(y+20);
+                rootText.setLayoutX(x+3);
+                rootText.setLayoutY(y+17);
 
                 binaryTreePane.getChildren().addAll(rootRect, rootText);
 
@@ -376,8 +376,8 @@ public class BinaryDecisionTree {
                     "\nVariance:" +Methods.round(tree.getVarRed(),5))
                     );
                 leftText.setTextAlignment(TextAlignment.CENTER);
-                leftText.setLayoutX(x);
-                leftText.setLayoutY(y+20);
+                leftText.setLayoutX(x+3);
+                leftText.setLayoutY(y+17);
                 
                 binaryTreePane.getChildren().addAll(leftRect,leftText );
                 printTreeVisualisation(tree.getLeft(), indent + "  ",x-offsetX,y+offsetY, false,true, depth+1);
@@ -396,7 +396,7 @@ public class BinaryDecisionTree {
            }
             finalRect.setArcWidth(10);
             finalRect.setArcHeight(10);
-            finalRect.setLayoutX(x);
+            finalRect.setLayoutX(x+50);
             finalRect.setLayoutY(y);
 
             Text finalText = new Text(String.valueOf("L: "+Methods.round(tree.getValue(),2)));
@@ -404,8 +404,8 @@ public class BinaryDecisionTree {
                  finalText.setText("R: "+Methods.round(tree.getValue(),2));
             }
             finalText.setTextAlignment(TextAlignment.CENTER);
-            finalText.setLayoutX(x);
-            finalText.setLayoutY(y+20);
+            finalText.setLayoutX(x+55);
+            finalText.setLayoutY(y+15);
 
             binaryTreePane.getChildren().addAll(finalRect,finalText);
         }
