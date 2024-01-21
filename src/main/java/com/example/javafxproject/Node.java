@@ -34,13 +34,13 @@ public class Node {
 
     public String getAttributeName(){
     if (attributeIndex == 0){
-        return "Suruna Value";
+        return "Suruna Value =";
     } else if (attributeIndex==1) {
-        return"Hurni Level";
+        return"Hurni Level =";
     } else if (attributeIndex==2) {
-        return "Lal Count";
+        return "Lal Count <=";
     } else if (attributeIndex==3) {
-        return "Volta";
+        return "Volta =";
     }else {
         return " attribute ? ";
     }

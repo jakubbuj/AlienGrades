@@ -1383,7 +1383,7 @@ public class HelloController {
         
         //options container 
         VBox vbox = new VBox();
-        vbox.setPrefWidth(260);  
+        vbox.setPrefWidth(200);  
         vbox.setPrefHeight(800); 
 
         // Options
@@ -1423,6 +1423,7 @@ public class HelloController {
         TextField textFieldLalCount = new TextField();
         textFieldLalCount.setMaxWidth(200);
         textFieldLalCount.setPromptText("22");
+        textFieldLalCount.setText("22");
         // course
         ChoiceBox<String> COURSEChoiceBox = new ChoiceBox<>();
         COURSEChoiceBox.getItems().addAll("JTE-234","ATE-003","TGL-013","PPL-239","WDM-974","GHL-823","HLU-200","MON-014","FEA-907","LPG-307","TSO-010","LDE-009","JJP-001","MTE-004","LUU-003","LOE-103","PLO-132","BKO-800","SLE-332","BKO-801","DSE-003","DSE-005","ATE-014","JTW-004","ATE-008","DSE-007","ATE-214","JHF-101","KMO-007","WOT-104");
@@ -1437,23 +1438,41 @@ public class HelloController {
         TextField textFieldFOREST_SIZE = new TextField();
         textFieldFOREST_SIZE.setMaxWidth(200);
         textFieldFOREST_SIZE.setPromptText("100");
+        textFieldFOREST_SIZE.setText("100");
         TextField textFieldBOOTSTRAP_SIZE = new TextField();
         textFieldBOOTSTRAP_SIZE.setMaxWidth(200);
         textFieldBOOTSTRAP_SIZE.setPromptText("25");
+        textFieldBOOTSTRAP_SIZE.setText("25");
         TextField textFieldFOREST_VAR = new TextField();
         textFieldFOREST_VAR.setMaxWidth(200);
         textFieldFOREST_VAR.setPromptText("3");
+        textFieldFOREST_VAR.setText("3");
 
         Button submitButton = new Button("Submit");
 
-         // visulaisation
+        Button backButton = new Button("Go back");
+        backButton.setOnAction(event -> {
+            try {
+                switchToMainScene(stage);
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        });
+         // visualisation
          Pane p = new Pane();
          p.setPrefWidth(1000);  
-         p.setPrefHeight(1000); 
- 
+         p.setPrefHeight(1000);
+         
+         // Output
+         Pane outputContainer = new Pane();
+         outputContainer.setLayoutX(300); 
+         outputContainer.setLayoutY(600); 
+         outputContainer.setStyle("-fx-background-color: rgb(237, 237, 237);");
+
+
          //Container Left-Right
          HBox hbox = new HBox(10);
-         hbox.setPadding(new Insets(10));
+         hbox.setPadding(new Insets(10, 0,0,30));
          vbox.setMargin(OptionsLabel, new Insets(10, 0, 10, 0));
          vbox.setMargin(StudentOptionsLabel, new Insets(10, 0, 5, 0));
          vbox.setMargin(treeOptionsLabel, new Insets(20, 0, 5, 0));
@@ -1480,7 +1499,9 @@ public class HelloController {
             BOOTSTRAP_SIZELabel ,textFieldBOOTSTRAP_SIZE,
             FOREST_VARLabel,textFieldFOREST_VAR,
             
-            submitButton
+            submitButton,
+            backButton
+
         );
 
         //event listeners for options
@@ -1489,13 +1510,13 @@ public class HelloController {
                     SurunaValueChoiceBox.getValue(),
                     HurniLevelChoiceBox.getValue(),
                     VoltaChoiceBox.getValue(),
-                    Integer.parseInt(textFieldLalCount.getText())//,
-                    // COURSEChoiceBox.getValue(),
-                    // Integer.parseInt(DEPTHChoiceBox.getValue()),
-                    // Integer.parseInt(SPLITSChoiceBox.getValue()),
-                    // Integer.parseInt(textFieldFOREST_SIZE.getText()),
-                    // Integer.parseInt(textFieldBOOTSTRAP_SIZE.getText()),
-                    // Integer.parseInt(textFieldFOREST_VAR.getText())
+                    Integer.parseInt(textFieldLalCount.getText()),
+                    getIdOfCourseChoiceBox(COURSEChoiceBox),
+                    Integer.parseInt(DEPTHChoiceBox.getValue()),
+                    Integer.parseInt(SPLITSChoiceBox.getValue()),
+                    Integer.parseInt(textFieldFOREST_SIZE.getText()),
+                    Integer.parseInt(textFieldBOOTSTRAP_SIZE.getText()),
+                    Integer.parseInt(textFieldFOREST_VAR.getText())
                 ));
                
                 hbox.getChildren().addAll(p);
@@ -1514,38 +1535,41 @@ public class HelloController {
 
   
     // Drawing tree 
-   private static Pane drawTree
+   private static Pane[] drawTree
    (
     //student atr parameters
-    String AtrSurunaValue,String AtrHurniLevel,String AtrVolta,int AtrLalCount//,
-    //course 
-    //String COURSE_ID,
+    String AtrSurunaValue,String AtrHurniLevel,String AtrVolta,int AtrLalCount,
+    //courses
+    int COURSE_ID,
     //tree/forest
-    //int DEPTH,  int SPLITS, int FOREST_SIZE,int BOOTSTRAP_SIZE,int FOREST_VAR
+    int DEPTH,  int SPLITS, int FOREST_SIZE,int BOOTSTRAP_SIZE,int FOREST_VAR
     ) {
 
     //SETTINGS
       //general
       final int STUDENT_ID = 1002347;
-      final int COURSE = 1;  //courses without data: 10, 16, 19
+      //final int COURSE = 1;  //courses without data: 10, 16, 19
+      int COURSE = COURSE_ID;  
 
     //tree 
-      final int DEPTH = 2; 
-      final int SPLITS = 2; //number of splits --> keep at 2
+      //final int DEPTH = 2; 
+      //final int SPLITS = 2; //number of splits --> keep at 2
       final boolean PRINT_TREE = false; //commandline visualisation
 
     //forest
-      final int FOREST_SIZE = 1; //how many trees a forest contains
-      final int FOREST_DEPTH = 3; //depth for every tree in the forest
-      final int FOREST_SPLITS = 2; //number of splits --> keep at 2
-     final int BOOTSTRAP_SIZE = 25; //size of trainingdata that a tree is trained on
-      final int FOREST_VAR =  3; //number of variables a tree randomly selects
+      //final int FOREST_SIZE = 1; //how many trees a forest contains
+      //final int FOREST_DEPTH = 3; //depth for every tree in the forest
+      //final int FOREST_SPLITS = 2; //number of splits --> keep at 2
+      int FOREST_DEPTH = DEPTH;
+      int FOREST_SPLITS =SPLITS;
+    // final int BOOTSTRAP_SIZE = 25; //size of trainingdata that a tree is trained on
+     // final int FOREST_VAR =  3; //number of variables a tree randomly selects
       final boolean PRINT_FOREST = false; //cmd line visualisation of the first tree in the forest
 
   //loading files
     final double[][] arrayOfCurrentGrades = Methods.File_To_Array("src/main/resources/com/example/javafxproject/CurrentGrades.csv");
     final String[][] arrayOfStudentInfo = Methods.File_To_Array_String("src/main/resources/com/example/javafxproject/StudentInfo.csv");
-   
+   String StudentInfo[]={AtrSurunaValue, AtrHurniLevel, AtrVolta,""+AtrLalCount};
 
 
   //checking if student has properties
@@ -1554,8 +1578,8 @@ public class HelloController {
       return null; 
     }
     System.out.println("course: "+COURSE);
-    System.out.println("properties: "+Arrays.toString(arrayOfStudentInfo[STUDENT_ID]));
-    System.out.println("expected: "+ arrayOfCurrentGrades[STUDENT_ID][COURSE]);
+    System.out.println("properties: "+Arrays.toString(StudentInfo));
+    //System.out.println("expected: "+ arrayOfCurrentGrades[STUDENT_ID][COURSE]);
 
   //splitting data into trainingsets
     int[] training = DataPreparation.getTrainingIndexes(arrayOfCurrentGrades, COURSE);
@@ -1579,22 +1603,15 @@ public class HelloController {
     tree.fit(trainDatasetAttributes,trainDatasetCourses,COURSE);
     forest.fit(trainDatasetAttributes, trainDatasetCourses, COURSE);
   //making a prediction
-    System.out.println("tree prediction: "+ tree.predict(arrayOfStudentInfo[STUDENT_ID]));
-    System.out.println("forest prediction: "+ forest.predict(arrayOfStudentInfo[STUDENT_ID]));
+    System.out.println("tree prediction: "+ tree.predict(StudentInfo));
+    System.out.println("forest prediction: "+ forest.predict(StudentInfo));
   //testing the trees
   TreeTests test = new TreeTests(arrayOfCurrentGrades, arrayOfStudentInfo);
   System.out.println("tree accuracy: "+test.getAccuracy(tree, COURSE)); //accuracy for this tree on this course
   ForestTests ftest = new ForestTests(arrayOfCurrentGrades, arrayOfStudentInfo);
   System.out.println("forest accuracy: "+ftest.getAccuracy(forest, COURSE));
 
-    
-  //visualisising tree
-  if (PRINT_TREE) tree.printTree();
-  if (PRINT_FOREST) forest.printTree();
-  tree.printTreeVisualisation(450,20);
-  return tree.getPaneTreeVisualisation();
-
-  // //finding best depth --> 3
+   // //finding best depth --> 3
   // test.testDepth(0, 6);
   // //finding best forestsize --> 50
   // ftest.testForestSize(0, 100, 10);
@@ -1604,6 +1621,67 @@ public class HelloController {
   // ftest.testBootstrapSize(10, 50, 10);
   // //finding best amount of var --> 3
   // ftest.testVariables(1,4);
+
+
+
+  //visualisising tree
+  //in console
+  if (PRINT_TREE) tree.printTree();
+  if (PRINT_FOREST) forest.printTree();
+  // in GUI
+  // tree pane  generation
+  tree.printTreeVisualisation(450,20);
+  //outputs pane 
+  
+  Label predictionOutputLabel = new Label("Predictions: ");
+  Label testOutputLabel = new Label("Testing: ");
+  predictionOutputLabel.setStyle("-fx-font-size: 24;");
+  testOutputLabel.setStyle("-fx-font-size: 24;");
+
+  Text treePredicitonText = new Text("Tree: "+tree.predict(arrayOfStudentInfo[STUDENT_ID]));
+  Text forestPredicitonText = new Text("Forest: "+forest.predict(arrayOfStudentInfo[STUDENT_ID]));
+
+  Text treeTestText = new Text("Tree: "+ test.getAccuracy(tree, COURSE));
+  Text forestTestText = new Text("Forest: "+ftest.getAccuracy(forest, COURSE));
+
+  treePredicitonText.setStyle("-fx-font-size: 20;");
+  forestPredicitonText.setStyle("-fx-font-size: 20;");
+  treeTestText.setStyle("-fx-font-size: 20;");
+  forestTestText.setStyle("-fx-font-size: 20;");
+
+  HBox containerOut = new HBox();
+  VBox containerIn1 = new VBox();
+  VBox containerIn2 = new VBox();
+
+  containerIn1.getChildren().addAll(predictionOutputLabel,treePredicitonText,forestPredicitonText);
+  containerIn2.getChildren().addAll(testOutputLabel,treeTestText,forestTestText);
+  containerOut.getChildren().addAll(containerIn1,containerIn2);
+
+  VBox.setMargin(predictionOutputLabel, new Insets(10, 0, 0, 20));
+  VBox.setMargin(testOutputLabel, new Insets(10, 0, 0, 20));
+  containerOut.setSpacing(20);
+  
+  Pane outputPane = new Pane();
+  
+  outputPane.getChildren().addAll(containerOut);
+  
+  Pane[] panes = new Pane[2];
+  panes[0] = tree.getPaneTreeVisualisation();
+  panes[1] = tree.getPaneTreeVisualisation(); // to change
+  return panes;
+
+ 
   
    }
+
+   public static int getIdOfCourseChoiceBox(ChoiceBox x ){
+        String courses[] = { "JTE-234","ATE-003","TGL-013","PPL-239","WDM-974","GHL-823","HLU-200","MON-014","FEA-907","LPG-307","TSO-010","LDE-009","JJP-001","MTE-004","LUU-003","LOE-103","PLO-132","BKO-800","SLE-332","BKO-801","DSE-003","DSE-005","ATE-014","JTW-004","ATE-008","DSE-007","ATE-214","JHF-101","KMO-007","WOT-104"};
+        String courseName = ""+x.getValue();
+        for(int i = 0; i<courses.length; i++){
+            if(courses[i].equals(courseName)){
+                return i ;
+            }
+        }
+        return 0;
+    }
 }
